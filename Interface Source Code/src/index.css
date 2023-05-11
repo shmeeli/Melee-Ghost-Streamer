@@ -1,4 +1,3 @@
-
 @font-face {
   font-family: "Roboto-Regular";
   src: url('fonts/Roboto-Regular.ttf');
@@ -44,8 +43,9 @@ body {
   box-sizing: border-box;
   border-radius: 3px;
   border: 1px solid var(--bg4);
-  transition: border-color 100ms;  
+  transition: border-color 100ms;
 }
+
 input[type="text"] {
   font-family: 'Roboto-Regular';
   font-size: 13px;
@@ -121,7 +121,8 @@ input[type="text"] {
   padding-left: 10px;
 }
 
-#p1Tag, #p2Tag {
+#p1Tag,
+#p2Tag {
   float: left;
   min-width: 34px;
   max-width: 70px;
@@ -130,7 +131,8 @@ input[type="text"] {
   border-bottom-right-radius: 0px;
 }
 
-#p1Name, #p2Name {
+#p1Name,
+#p2Name {
   float: left;
   min-width: 60px;
   max-width: 174px;
@@ -151,6 +153,26 @@ input[type="text"] {
   border: 1px solid var(--bg4);
   box-sizing: border-box;
   outline: none;
+}
+
+.pAuto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pAuto span {
+  font-size: 12px;
+  text-align: center;
+  width: 59px;
+}
+
+.pAuto input {
+  width: 20px;
+  margin: 0;
+  padding: 0;
+  margin-left: 18px;
+  height: 16px;
 }
 
 .pColor:hover {
@@ -180,14 +202,14 @@ input[type="text"] {
   position: absolute;
   background-color: var(--bg5);
   width: 100px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 3;
   font-size: 15px;
 }
 
 .colorEntry {
   display: flex;
-  align-items: center;  
+  align-items: center;
 }
 
 .colorEntry:hover {
@@ -219,6 +241,7 @@ input[type="text"] {
   align-items: center;
   color: var(--text2);
 }
+
 .scoreBox:hover {
   border-color: var(--selected);
 }
@@ -250,18 +273,24 @@ input[type="text"] {
   display: flex;
   align-items: center;
 }
+
 .wlBox:hover {
   border-color: var(--selected);
 }
 
-#p1W, #p2W {
+#p1W,
+#p2W {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
-#p1W:hover, #p2W:hover {
+
+#p1W:hover,
+#p2W:hover {
   transform: scale(1);
 }
-#p1L, #p2L {
+
+#p1L,
+#p2L {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
   box-sizing: border-box;
@@ -275,15 +304,14 @@ input[type="text"] {
   padding-left: 10px;
 }
 
-.charSelector {
-  
-}
+.charSelector {}
 
 .charSelectorImg {
   width: 52px;
   object-fit: contain;
   outline: none;
 }
+
 .charSelectorImg:hover {
   filter: brightness(1.5);
 }
@@ -302,6 +330,7 @@ input[type="text"] {
   align-items: center;
   opacity: 0;
 }
+
 .skinSelector:hover {
   border-color: var(--selected);
 }
@@ -310,14 +339,18 @@ input[type="text"] {
   outline: none;
   padding-bottom: 5px;
 }
+
 .skinIcon:hover {
-  filter: brightness(1.5); 
+  filter: brightness(1.5);
 }
 
-#skinListP1, #skinListP2 {
+#skinListP1,
+#skinListP2 {
   margin-top: -1px;
 }
-#skinListP1Sheik, #skinListP2Sheik {
+
+#skinListP1Sheik,
+#skinListP2Sheik {
   margin-top: -5px;
 }
 
@@ -336,15 +369,18 @@ input[type="text"] {
   align-items: center;
   justify-content: center;
 }
+
 #swapButton:hover {
   filter: brightness(1.3);
 }
+
 #clearButton {
   width: 100%;
   height: 15%;
   background-color: var(--bg4);
   cursor: pointer;
 }
+
 #clearButton:hover {
   filter: brightness(1.3);
 }
@@ -357,10 +393,12 @@ input[type="text"] {
   transform: scale(1.5, 1.5);
   transition: opacity 200ms, transform 200ms;
 }
+
 #swapButton:hover #swapIcon {
   opacity: 1;
   transform: scale(2, 2);
 }
+
 #clearButton:hover #clearIcon {
   opacity: 1;
   transform: scale(2, 2);
@@ -399,21 +437,23 @@ input[type="text"] {
 
 .bestOfBox:hover {
   border-color: var(--selected);
-  transform: scale(1); /* cheap trick to show a correct border */
+  transform: scale(1);
+  /* cheap trick to show a correct border */
 }
 
 #bo3Div {
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
 }
+
 #bo5Div {
   border-top-left-radius: 0px;
   border-bottom-left-radius: 0px;
   margin-left: -1px;
 }
 
-#roundName, #tournamentName {
-  width: 100%;
+#roundName,
+#tournamentName {
   text-align: center;
   margin-right: 4px;
 }
@@ -437,6 +477,7 @@ input[type="text"] {
   margin-right: 4px;
   margin-left: 5px;
 }
+
 #twitchIcon {
   margin-right: 4px;
   margin-left: 5px;
@@ -447,17 +488,22 @@ input[type="text"] {
   display: flex;
   justify-items: center;
 }
+
 #caster2 {
   display: flex;
   justify-items: center;
 }
 
-#cName1, #cName2 {
+#cName1,
+#cName2 {
   width: 190px;
   margin-left: 4px;
 }
 
-#cTwitter1, #cTwitter2, #cTwitch1, #cTwitch2 {
+#cTwitter1,
+#cTwitter2,
+#cTwitch1,
+#cTwitch2 {
   width: 156px;
   margin-left: 1px;
 }
@@ -466,6 +512,7 @@ input[type="text"] {
 #botBar {
   width: 100%;
   height: 28px;
+  margin-top: 10px;
   display: flex;
   background-color: var(--bg5);
   cursor: pointer;
@@ -495,7 +542,7 @@ input[type="text"] {
   background-color: var(--bg3);
 }
 
-#updateRegion:active{
+#updateRegion:active {
   background-color: var(--bg5);
 }
 
@@ -517,7 +564,7 @@ input[type="text"] {
   background-color: var(--bg1);
 }
 
-#settingsRegion:active{
+#settingsRegion:active {
   background-color: var(--bg5);
 }
 
@@ -560,6 +607,7 @@ input[type="text"] {
 
   /* background-color: violet; */
 }
+
 .settingBox:hover {
   background-color: var(--bg2);
 }
@@ -600,9 +648,38 @@ input[type="text"] {
   transition: opacity 200ms, transform 200ms;
 }
 
-.rosterLine {
-}
+.rosterLine {}
 
 .charInRoster:hover {
   filter: brightness(1.5);
+}
+
+.next {
+  display: flex;
+  justify-content: center;
+}
+
+.next .textInput {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.nextAuto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.nextAuto span {
+  font-size: 12px;
+  text-align: center;
+  width: 51px;
+}
+
+.nextAuto input {
+  width: 17px;
+  margin: 0;
+  padding: 0;
+  margin-left: 18px;
+  height: 16px;
 }

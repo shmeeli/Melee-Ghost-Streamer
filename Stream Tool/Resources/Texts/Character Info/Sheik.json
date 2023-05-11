@@ -4,17 +4,17 @@
         "Red",
         "Blue",
         "Green",
-        "Black"
+        "White"
     ],
-    "saga": "Mario",
+    "saga": "Zelda",
     "Left": {
-        "x": -25,
-        "y": 160,
-        "scale": 1.4
+        "x": 75,
+        "y": 275,
+        "scale": 1.6
     },
     "Right": {
-        "x": 600,
-        "y": 0,
+        "x": 750,
+        "y": 125,
         "scale": 1.3
     }
 }

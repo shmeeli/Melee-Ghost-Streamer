@@ -10,12 +10,12 @@ const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 600,
-    height: 300,
-    
+    height: 600,
+
     minWidth: 600,
-    minHeight: 300,
+    minHeight: 600,
     maxWidth: 600,
-    maxHeight: 300,
+    maxHeight: 600,
 
     webPreferences: {
       nodeIntegration: true,
@@ -23,9 +23,9 @@ const createWindow = () => {
   });
 
   // we dont like menus
-  mainWindow.removeMenu();
+  // mainWindow.removeMenu();
 
-  /* mainWindow.webContents.openDevTools(); */
+  mainWindow.webContents.openDevTools();
 
   // load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));

@@ -4,23 +4,17 @@
         "Red",
         "Blue",
         "Green",
-        "Purple"
+        "White"
     ],
     "saga": "Zelda",
     "Left": {
-        "x": 50,
-        "y": 430,
-        "scale": 1.6,
-        "xSheik": 75,
-        "ySheik": 275,
-        "scaleSheik": 1.6
+        "x": 0,
+        "y": 520,
+        "scale": 1
     },
     "Right": {
-        "x": 620,
-        "y": 270,
-        "scale": 1.4,
-        "xSheik": 750,
-        "ySheik": 125,
-        "scaleSheik": 1.3
+        "x": -70,
+        "y": 480,
+        "scale": 0.85
     }
 }

@@ -2,19 +2,19 @@
     "skinList": [
         "Default",
         "Yellow",
-        "Brown",
+        "Black",
         "Blue",
         "Green"
     ],
     "saga": "Mario",
     "Left": {
-        "x": -75,
-        "y": 160,
-        "scale": 1.4
+        "x": 0,
+        "y": 420,
+        "scale": 1.2
     },
     "Right": {
-        "x": 650,
-        "y": 0,
-        "scale": 1.3
+        "x": 0,
+        "y": 340,
+        "scale": 1.1
     }
 }

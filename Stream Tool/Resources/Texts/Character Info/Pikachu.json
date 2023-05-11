@@ -2,18 +2,18 @@
     "skinList": [
         "Default",
         "Red",
-        "Blue",
+        "Party Hat",
         "Green"
     ],
     "saga": "Pokemon",
     "Left": {
-        "x": -50,
-        "y": 160,
-        "scale": 1.4
+        "x": 90,
+        "y": 550,
+        "scale": 1.5
     },
     "Right": {
-        "x": 625,
-        "y": 0,
-        "scale": 1.1
+        "x": -40,
+        "y": 500,
+        "scale": 1.15
     }
 }

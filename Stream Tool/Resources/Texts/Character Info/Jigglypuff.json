@@ -3,18 +3,18 @@
         "Default",
         "Red",
         "Blue",
-        "Green",
-        "Yellow"
+        "Headband",
+        "Crown"
     ],
     "saga": "Pokemon",
     "Left": {
-        "x": -75,
-        "y": 160,
+        "x": 0,
+        "y": 560,
         "scale": 1.4
     },
     "Right": {
-        "x": 525,
-        "y": 0,
-        "scale": 0.8
+        "x": -130,
+        "y": 490,
+        "scale": 0.78
     }
 }

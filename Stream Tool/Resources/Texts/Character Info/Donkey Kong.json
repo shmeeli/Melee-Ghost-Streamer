@@ -1,20 +1,20 @@
 {
     "skinList": [
         "Default",
-        "Blue",
+        "Black",
         "Red",
-        "Purple",
+        "Blue",
         "Green"
     ],
     "saga": "Donkey Kong",
     "Left": {
-        "x": -50,
-        "y": 150,
-        "scale": 1.4
+        "x": 30,
+        "y": 500,
+        "scale": 1.5
     },
     "Right": {
-        "x": 650,
-        "y": 0,
-        "scale": 1.1
+        "x": 0,
+        "y": 452,
+        "scale": 1.2
     }
 }

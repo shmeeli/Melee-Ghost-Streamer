@@ -35,17 +35,17 @@ function init() {
 	}
 
 	mainLoop();
-	setInterval( () => { mainLoop(); }, 500); //update interval
+	setInterval(() => { mainLoop(); }, 500); //update interval
 }
 
-	
+
 function getData(scInfo) {
 	let p1Name = scInfo['p1Name'];
 	let p1Team = scInfo['p1Team'];
 	let p1Color = scInfo['p1Color'];
 	let p1Character = scInfo['p1Character'];
 	let p1Skin = scInfo['p1Skin'];
-	
+
 	let p2Name = scInfo['p2Name'];
 	let p2Team = scInfo['p2Team'];
 	let p2Color = scInfo['p2Color'];
@@ -68,11 +68,11 @@ function getData(scInfo) {
 		//starting with the player 1 name
 		updatePlayerName('p1Wrapper', 'p1Name', 'p1Team', p1Name, p1Team);
 		//fade in the player text
-		fadeIn("#p1Wrapper", introDelay+.15);
+		fadeIn("#p1Wrapper", introDelay + .15);
 
 		//same for player 2
 		updatePlayerName('p2Wrapper', 'p2Name', 'p2Team', p2Name, p2Team);
-		fadeIn("#p2Wrapper", introDelay+.15);
+		fadeIn("#p2Wrapper", introDelay + .15);
 
 
 		//change the player info character text
@@ -86,8 +86,8 @@ function getData(scInfo) {
 			document.getElementById('p2CharInfo').textContent = "Sheik";
 		}
 		//fade it in
-		fadeIn("#p1Info", introDelay+.15);
-		fadeIn("#p2Info", introDelay+.15);
+		fadeIn("#p1Info", introDelay + .15);
+		fadeIn("#p2Info", introDelay + .15);
 
 
 		//set p1 character
@@ -131,7 +131,7 @@ function getData(scInfo) {
 		socialChange1("caster1TwitterBox", "caster1TwitchBox");
 		socialChange2("caster2TwitterBox", "caster2TwitchBox");
 		//set an interval to keep changing the names
-		socialInt1 = setInterval( () => {
+		socialInt1 = setInterval(() => {
 			socialChange1("caster1TwitterBox", "caster1TwitchBox");
 		}, socialInterval);
 		socialInt2 = setInterval(() => {
@@ -176,7 +176,7 @@ function getData(scInfo) {
 
 		//same for player 2
 		if (document.getElementById('p2Name').textContent != p2Name ||
-			document.getElementById('p2Team').textContent != p2Team){
+			document.getElementById('p2Team').textContent != p2Team) {
 			fadeOut("#p2Wrapper", () => {
 				updatePlayerName('p2Wrapper', 'p2Name', 'p2Team', p2Name, p2Team);
 				fadeIn("#p2Wrapper", .2);
@@ -208,7 +208,7 @@ function getData(scInfo) {
 					fadeIn('#p1Info');
 				});
 			}
-			
+
 			p1CharacterPrev = p1Character;
 			p1SkinPrev = p1Skin;
 		}
@@ -231,7 +231,7 @@ function getData(scInfo) {
 					fadeIn('#p2Info');
 				});
 			}
-		
+
 			p2CharacterPrev = p2Character;
 			p2SkinPrev = p2Skin;
 		}
@@ -256,7 +256,7 @@ function getData(scInfo) {
 
 
 		//update round text
-		if (document.getElementById('round').textContent != round){
+		if (document.getElementById('round').textContent != round) {
 			fadeOut("#round", () => {
 				updateText("round", round, roundSize);
 				fadeIn("#round", .2);
@@ -264,7 +264,7 @@ function getData(scInfo) {
 		}
 
 		//update tournament text
-		if (document.getElementById('tournament').textContent != tournamentName){
+		if (document.getElementById('tournament').textContent != tournamentName) {
 			fadeOut("#tournament", () => {
 				updateText("tournament", tournamentName, tournamentSize);
 				fadeIn("#tournament", .2);
@@ -273,7 +273,7 @@ function getData(scInfo) {
 
 
 		//update caster 1 info
-		if (document.getElementById('caster1N').textContent != caster1){
+		if (document.getElementById('caster1N').textContent != caster1) {
 			fadeOut("#caster1TextBox", () => {
 				updateSocialText("caster1N", caster1, casterSize, 'caster1TextBox');
 				//if no caster name, dont fade in the caster icon
@@ -283,16 +283,16 @@ function getData(scInfo) {
 			});
 		}
 		//caster 1's twitter
-		if (document.getElementById('caster1Tr').textContent != twitter1){
+		if (document.getElementById('caster1Tr').textContent != twitter1) {
 			updateSocial(twitter1, "caster1Tr", "caster1TwitterBox", twitch1, "caster1TwitchBox");
 		}
 		//caster 2's twitch (same as above)
-		if (document.getElementById('caster1Th').textContent != twitch1){
+		if (document.getElementById('caster1Th').textContent != twitch1) {
 			updateSocial(twitch1, "caster1Th", "caster1TwitchBox", twitter1, "caster1TwitterBox");
 		}
 
 		//caster 2, same as above
-		if (document.getElementById('caster2N').textContent != caster2){
+		if (document.getElementById('caster2N').textContent != caster2) {
 			fadeOut("#caster2TextBox", () => {
 				updateSocialText("caster2N", caster2, casterSize, 'caster2TextBox');
 				if (caster2 != "") {
@@ -300,11 +300,11 @@ function getData(scInfo) {
 				}
 			});
 		}
-		if (document.getElementById('caster2Tr').textContent != twitter2){
+		if (document.getElementById('caster2Tr').textContent != twitter2) {
 			updateSocial(twitter2, "caster2Tr", "caster2TwitterBox", twitch2, "caster2TwitchBox");
 		}
 
-		if (document.getElementById('caster2Th').textContent != twitch2){
+		if (document.getElementById('caster2Th').textContent != twitch2) {
 			updateSocial(twitch2, "caster2Th", "caster2TwitchBox", twitter2, "caster2TwitterBox");
 		}
 	}
@@ -373,7 +373,7 @@ function socialChange1(twitterWrapperID, twitchWrapperID) {
 			twitterWrapperEL.style.opacity = 1;
 			twitchWrapperEL.style.opacity = 0;
 		}
-		
+
 
 	} else if (!!twitter1 && !!twitch1) {
 
@@ -431,19 +431,19 @@ function updateSocial(mainSocial, mainText, mainBox, otherSocial, otherBox) {
 	}
 	//check if this is their turn so we fade out the other one
 	if (localSwitch) {
-		fadeOut("#"+otherBox, () => {})
+		fadeOut("#" + otherBox, () => { })
 	}
 
 	//now do the classics
-	fadeOut("#"+mainBox, () => {
+	fadeOut("#" + mainBox, () => {
 		updateSocialText(mainText, mainSocial, twitterSize, mainBox);
 		//check if its twitter's turn to show up
 		if (otherSocial == "" && mainSocial != "") {
-			fadeIn("#"+mainBox, .2);
+			fadeIn("#" + mainBox, .2);
 		} else if (localSwitch && mainSocial != "") {
-			fadeIn("#"+mainBox, .2);
+			fadeIn("#" + mainBox, .2);
 		} else if (otherSocial != "") {
-			fadeIn("#"+otherBox, .2);
+			fadeIn("#" + otherBox, .2);
 		}
 	});
 }
@@ -497,30 +497,30 @@ function getFontSize(textElement) {
 
 //fade out
 function fadeOut(itemID, funct = console.log("Hola!"), dur = fadeOutTime) {
-	gsap.to(itemID, {opacity: 0, duration: dur, onComplete: funct});
+	gsap.to(itemID, { opacity: 0, duration: dur, onComplete: funct });
 }
 
 //fade in
 function fadeIn(itemID, timeDelay, dur = fadeInTime) {
-	gsap.to(itemID, {delay: timeDelay, opacity: 1, duration: dur});
+	gsap.to(itemID, { delay: timeDelay, opacity: 1, duration: dur });
 }
 
 //fade out for the characters
 function charaFadeOut(itemID, charMove, funct) {
-	gsap.to(itemID, {delay: .2, x: charMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: funct});
+	gsap.to(itemID, { delay: .2, x: charMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: funct });
 }
 
 //fade in characters edition
 function charaFadeIn(charaID) {
-	gsap.to(charaID, {delay: .3, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime+.1});
+	gsap.to(charaID, { delay: .3, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime + .1 });
 }
 
 //initial characters fade in
 function initCharaFade(charaID, charMove) {
 	gsap.fromTo(charaID,
-		{x: charMove, opacity: 0},
-		{delay: introDelay, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
-	}
+		{ x: charMove, opacity: 0 },
+		{ delay: introDelay, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
+}
 
 //searches for the main json file
 function getInfo() {
@@ -531,7 +531,7 @@ function getInfo() {
 		oReq.send();
 
 		//will trigger when file loads
-		function reqListener () {
+		function reqListener() {
 			resolve(JSON.parse(oReq.responseText))
 		}
 	})
@@ -543,13 +543,13 @@ function getCharInfo(pCharacter) {
 	return new Promise(function (resolve) {
 		const oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", reqListener);
-		oReq.onerror = () => {resolve("notFound")}; //for obs local file browser sources
+		oReq.onerror = () => { resolve("notFound") }; //for obs local file browser sources
 		oReq.open("GET", 'Resources/Texts/Character Info/' + pCharacter + '.json');
 		oReq.send();
 
-		function reqListener () {
-			try {resolve(JSON.parse(oReq.responseText))}
-			catch {resolve("notFound")} //for live servers
+		function reqListener() {
+			try { resolve(JSON.parse(oReq.responseText)) }
+			catch { resolve("notFound") } //for live servers
 		}
 	})
 }
