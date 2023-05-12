@@ -990,14 +990,6 @@ function updatePlayers(game) {
 
     if (!setStartTime || !setOfficiallyStarted) {
         setStartTime = new Date();
-        videoData = {
-            charsP1: [charP1],
-            charsP2: [charP2],
-            charP1,
-            charP2,
-            skinP1,
-            skinP2,
-        }
     } else {
         if (videoData != null) {
             if (!videoData.charsP1.includes(charP1)) {
@@ -1006,6 +998,15 @@ function updatePlayers(game) {
 
             if (!videoData.charsP2.includes(charP2)) {
                 videoData.charsP2.push(charP2);
+            }
+        } else {
+            videoData = {
+                charsP1: [charP1],
+                charsP2: [charP2],
+                charP1,
+                charP2,
+                skinP1,
+                skinP2,
             }
         }
     }
