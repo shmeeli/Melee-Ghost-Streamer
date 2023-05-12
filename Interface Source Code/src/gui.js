@@ -1097,8 +1097,8 @@ function onSetEnds() {
 }
 
 async function getPGInfo(name1, name2) {
+    setHistory = `? - ?`;
     if (name1 == "" || name2 == "") {
-        setHistory = `? - ?`;
         return;
     }
 
@@ -1201,7 +1201,7 @@ async function getPGInfo(name1, name2) {
     const winsP2 = playerNumber == 2 ? wins : matches - wins;
 
     setHistory = `${winsP1} - ${winsP2}`;
-    fs.writeFileSync(mainPath + "/Simple Texts/Set History.txt",);
+    fs.writeFileSync(mainPath + "/Simple Texts/Set History.txt", setHistory);
 }
 
 async function pgFetchSearch(name) {
