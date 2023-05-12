@@ -90,6 +90,9 @@ const nextAutoInp = document.getElementById('nextAuto');
 const sceneMatchInp = document.getElementById('sceneMatch');
 const sceneOtherInp = document.getElementById('sceneOther');
 
+let previousStartggP1 = ''
+let previousStartggP2 = ''
+
 let player1Data;
 let player2Data;
 
@@ -99,6 +102,7 @@ let previousName2;
 let setStartTime;
 let setOfficiallyStarted;
 let recordingPath = '';
+let startggBracket;
 
 let videoData;
 
@@ -224,6 +228,10 @@ function init() {
 
 function setRecordingPath(path) {
     recordingPath = path;
+}
+
+function setStartggBracketUrl(url) {
+    startggBracket = url;
 }
 
 
@@ -1073,7 +1081,10 @@ function newSet() {
         scoreP2 = 0;
         p1Score.value = scoreP1;
         p2Score.value = scoreP2;
-    }, 5000);
+        if (startggBracket != null) {
+            fetchPlayers();
+        }
+    }, 30000);
 }
 
 function onSetEnds() {
@@ -1458,4 +1469,64 @@ async function makeReplay() {
     } catch (error) {
         console.error(`Error getting video duration: ${error.message}`);
     }
+}
+
+async function fetchPlayers() {
+    if (startggBracket == null || startggBracket == '') {
+        return;
+    }
+
+    const data = await fetch(startggBracket);
+    const htmlString = await data.text();
+
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(htmlString, 'text/html');
+
+    const element = htmlDoc.querySelector('.match.in-progress .fa-twitch');
+    if (element == null) {
+        return;
+    }
+    const parent = element.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+
+    const player1Container = parent.querySelector('.match-section-top .match-player-name-container');
+    const player2Container = parent.querySelector('.match-section-bottom .match-player-name-container');
+
+    const tag1 = player1Container.querySelector('.prefix')?.textContent || '';
+    const tag2 = player2Container.querySelector('.prefix')?.textContent || '';
+
+    const player1 = player1Container.textContent.replace(tag1, '').trim();
+    const player2 = player2Container.textContent.replace(tag2, '').trim();
+
+    if (player1 == null || player2 == null) {
+        return;
+    }
+
+    if (player1 == previousStartggP1 && player2 == previousStartggP2) {
+        setTimeout(() => {
+            fetchPlayers();
+        }, 10000);
+
+        return;
+    }
+
+    p1NameInp.value = player1;
+    p2NameInp.value = player2;
+
+    p1TagInp.value = tag1;
+    p2TagInp.value = tag2;
+
+    previousStartggP1 = player1;
+    previousStartggP2 = player2;
+
+    // Determine the round
+    const left = parent.style.left.replace('px', '')
+    const roundIndex = Math.floor(left / 204);
+    const roundElements = parent.parentNode.previousElementSibling.children;
+    const roundElement = roundElements[roundIndex];
+    console.log(roundElements, roundElements[roundIndex], roundIndex, roundElement);
+    const roundName = roundElement.textContent.trim();
+
+    roundInp.value = roundName;
+
+    writeScoreboard();
 }

@@ -27,6 +27,9 @@
       <input type="text" style="width: 1000px;" placeholder="Set your OBS mkv recording path"
         oninput="setRecordingPath(this.value)">
 
+      <input type="text" style="width: 1000px;" placeholder="Set the start.gg bracket url"
+        oninput="setStartggBracketUrl(this.value)">
+
       <div id="playerRegion">
 
         <div id="player1" class="player">
@@ -55,6 +58,7 @@
                 <input type="checkbox" id="p1Auto" tabindex="6"
                   title="Whether to automatically use the player's Slippi name">
               </div>
+              <input type="button" value="FETCH" onclick="fetchPlayers()">
             </div>
 
             <div class="scoreInfo">
