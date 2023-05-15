@@ -27,8 +27,21 @@
       <input type="text" style="width: 1000px;" placeholder="Set your OBS mkv recording path"
         oninput="setRecordingPath(this.value)">
 
-      <input type="text" style="width: 1000px;" placeholder="Set the start.gg bracket url"
-        oninput="setStartggBracketUrl(this.value)">
+      <div>
+        <input type="text" id="obsURL" style="width: 300px; display:inline;" placeholder="127.0.0.1">
+        <input type="text" id="obsPort" style="width: 100px; display:inline;" placeholder="4455">
+        <input type="password" id="obsPassword" style="width: 200px; display:inline;" placeholder="password">
+        <input type="button" id="connectOBS" tabindex="6" value="connect" onclick="connectToOBS()">
+        <span id="connectOBSStatus">Disconnected</span>
+      </div>
+
+      <div>
+        <input type="text" style="width: 525px; display:inline;" placeholder="Set the start.gg bracket url"
+          oninput="setStartggBracketUrl(this.value)">
+        <span>Toggle fetching current match</span>
+        <input type="checkbox" id="toggleStartgg" tabindex="6" title="Whether to fetch the current start.gg match"
+          onclick="toggleStartgg(this)">
+      </div>
 
       <div id="playerRegion">
 
@@ -53,12 +66,21 @@
 
                 </div>
               </div>
-              <div class="pAuto">
-                <span>Auto name</span>
-                <input type="checkbox" id="p1Auto" tabindex="6"
-                  title="Whether to automatically use the player's Slippi name">
+
+
+              <div class="pCheckboxes">
+                <input type="button" value="Swap names" style="font-size:10px; height: 20px" onclick="swapNames()">
+                <div class="pCheckbox pAuto">
+                  <span>Auto name</span>
+                  <input type="checkbox" id="p1Auto" tabindex="6"
+                    title="Whether to automatically use the player's Slippi name">
+                </div>
+                <div class="pCheckbox pPort">
+                  <span>Lower port prio</span>
+                  <input type="checkbox" id="pPort" tabindex="7" onchange="swapPortPrio(this)"
+                    title="Check this if this player should be the lower port.">
+                </div>
               </div>
-              <input type="button" value="FETCH" onclick="fetchPlayers()">
             </div>
 
             <div class="scoreInfo">
@@ -67,6 +89,7 @@
                 <span>Wins</span>
                 <input type="number" id="p1Score" class="textInput mousetrap" tabindex="3" value="0" min="0" max="99"
                   title="Insert the number of wins here">
+                <input type="button" value="Swap score" style="font-size:10px; height: 20px" onclick="swapScore()">
               </div>
 
               <div class="wlButtons">
@@ -142,10 +165,12 @@
                 </div>
                 <div class="dropdownColor" id="dropdownColorP2"></div>
               </div>
-              <div class="pAuto">
-                <span>Auto name</span>
-                <input type="checkbox" id="p2Auto" tabindex="6"
-                  title="Whether to automatically use the player's Slippi name">
+              <div class="pCheckboxes">
+                <div class="pCheckbox pAuto">
+                  <span>Auto name</span>
+                  <input type="checkbox" id="p2Auto" tabindex="6"
+                    title="Whether to automatically use the player's Slippi name">
+                </div>
               </div>
             </div>
 
@@ -190,8 +215,29 @@
           <div id="bo5Div" class="bestOfBox">Best of 5</div>
           <div id="boCrews" class="bestOfBox">Crews</div>
           <input type="button" value="NEW" onclick="newSet()">
+          <input type="button" value="END" onclick="onSetEnds()">
         </div>
-        <input type="text" id="roundName" class="textInput mousetrap" placeholder="Current Round" spellcheck="false">
+
+        <input type="text" list="roundNames" id="roundName" class="textInput mousetrap" placeholder="Current Round"
+          spellcheck="false">
+
+        <datalist id="roundNames">
+          <option value="Winners Round 1">
+          <option value="Winners Round 2">
+          <option value="Winners Round 3">
+          <option value="Winners Quarter-Final">
+          <option value="Winners Semi-Final">
+          <option value="Winners Final">
+          <option value="Grand Final">
+          <option value="Losers Round 1">
+          <option value="Losers Round 2">
+          <option value="Losers Round 3">
+          <option value="Losers Quarter-Final">
+          <option value="Losers Semi-Final">
+          <option value="Losers Final">
+        </datalist>
+
+
         <input type="text" id="tournamentName" class="textInput mousetrap" placeholder="Tournament Name"
           spellcheck="false">
       </div>
@@ -269,7 +315,7 @@
         <input type="button" value="APPLY" onclick="applyNextInfo()">
         <div class="nextAuto">
           <span>Auto</span>
-          <input type="checkbox" id="nextAuto" tabindex="6""
+          <input type="checkbox" id="nextAuto" tabindex="6"
             title=" Whether to automatically apply the new info 30 seconds after the set has ended.">
         </div>
       </div>
@@ -277,18 +323,33 @@
       <hr>
 
       <div id="scenes" class="scenes">
-        <input type="text" id="sceneMatch" class="textInput mousetrap" placeholder="Match scene name"
-          spellcheck="false">
-        <input type="text" id="sceneOther" class="textInput mousetrap" placeholder="Other scene name"
-          spellcheck="false">
+        <div class="sceneInfo">
+          <input type="text" id="sceneGameStart" class="textInput mousetrap" placeholder="Game scene name"
+            spellcheck="false">
+          <input type="text" id="sceneGameStartDelay" class="textInput mousetrap" placeholder="Delay in seconds">
+        </div>
+        <div class="sceneInfo">
+          <input type="text" id="sceneGameEnd" class="textInput mousetrap" placeholder="Game end scene name"
+            spellcheck="false">
+          <input type="text" id="sceneGameEndDelay" class="textInput mousetrap" placeholder="Delay in seconds">
+        </div>
+        <div class="sceneInfo">
+          <input type="text" id="sceneSetEnd" class="textInput mousetrap" placeholder="Set end scene name"
+            spellcheck="false">
+          <input type="text" id="sceneSetEndDelay" class="textInput mousetrap" placeholder="Delay in seconds">
+        </div>
       </div>
 
       <hr>
 
       <div id="replay" class="replay">
-        <input type="number" id="replayAmount" class="textInput mousetrap" placeholder="8" spellcheck="false">
+        <input type="number" id="replayAmount" class="textInput mousetrap" placeholder="8"
+          style="width:50px; margin-left: 10px;" spellcheck="false">
         <input type="button" value="REPLAY" onclick="makeReplay()">
       </div>
+
+      <input type="button" value="MAKE THUMBNAIL" style="display: inline; margin-left:170px;"
+        onclick="createThumbnail()">
 
       <div id="botBar">
         <div id="updateRegion" class="botRegion" title="Save current info to the json file. [Shortcut: Enter]">
