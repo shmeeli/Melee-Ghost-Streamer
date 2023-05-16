@@ -86,7 +86,7 @@
             <div class="scoreInfo">
 
               <div class="scoreBox" title="Press F1 to increase the score">
-                <span>Wins</span>
+                <span class="winText">Wins</span>
                 <input type="number" id="p1Score" class="textInput mousetrap" tabindex="3" value="0" min="0" max="99"
                   title="Insert the number of wins here">
                 <input type="button" value="Swap score" style="font-size:10px; height: 20px" onclick="swapScore()">
@@ -177,7 +177,7 @@
             <div class="scoreInfo">
 
               <div class="scoreBox" title="Press F2 to increase the score">
-                <span>Wins</span>
+                <span class="winText">Wins</span>
                 <input type="number" id="p2Score" class="textInput mousetrap" tabindex="3" value="0" min="0" max="99"
                   title="Insert the number of wins here">
               </div>
@@ -343,13 +343,14 @@
       <hr>
 
       <div id="replay" class="replay">
-        <input type="number" id="replayAmount" class="textInput mousetrap" placeholder="8"
+        <input type="number" id="replayDuration" class="textInput mousetrap" placeholder="8"
           style="width:50px; margin-left: 10px;" spellcheck="false">
-        <input type="button" value="REPLAY" onclick="makeReplay()">
+        <input type="button" value="REPLAY" onclick="createReplay()">
       </div>
 
-      <input type="button" value="MAKE THUMBNAIL" style="display: inline; margin-left:170px;"
-        onclick="createThumbnail()">
+      <input type="button" value="THUMBNAIL" style="display: inline; margin-left:170px;" onclick="createThumbnail()">
+
+      <input type="button" value="SHORT" style="display: inline; margin-left:170px;" onclick="createShort()">
 
       <div id="botBar">
         <div id="updateRegion" class="botRegion" title="Save current info to the json file. [Shortcut: Enter]">

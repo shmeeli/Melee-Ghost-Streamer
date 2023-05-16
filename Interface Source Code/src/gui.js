@@ -28,7 +28,8 @@ obs.on('ConnectionError', (err) => {
     console.error('Failed to connect: ' + err);
 });
 
-const mainPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Texts');
+const mainPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources');
+const textPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Texts');
 const charPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Characters');
 const overlayPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Overlay');
 const fontPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Fonts');
@@ -308,10 +309,19 @@ function getJson(fileName) {
     }
 }
 
+function getTextJson(fileName) {
+    try {
+        let settingsRaw = fs.readFileSync(textPath + "/" + fileName + ".json");
+        return JSON.parse(settingsRaw);
+    } catch (error) {
+        return undefined;
+    }
+}
+
 
 //will load the color list to a color slot combo box
 function loadColors(pNum) {
-    let colorList = getJson("InterfaceInfo"); //check the color list
+    let colorList = getTextJson("InterfaceInfo"); //check the color list
 
     //for each color found, add them to the color list
     for (let i = 0; i < Object.keys(colorList.colorSlots).length; i++) {
@@ -371,7 +381,7 @@ function updateColor(e, n, c) {
         pNum = n;
     }
 
-    let colorList = getJson("InterfaceInfo");
+    let colorList = getTextJson("InterfaceInfo");
     let clickedColor = c ? colorList.colorSlots["color" + (c - 1)].name : this.textContent;
 
     //search for the color we just clicked
@@ -426,7 +436,7 @@ function charImgChange(charImg, charName, skinName = "Default") {
 
 function createCharRoster() {
     //checks the character list which we use to order stuff
-    const guiSettings = getJson("InterfaceInfo");
+    const guiSettings = getTextJson("InterfaceInfo");
 
     //first row
     for (let i = 0; i < 9; i++) {
@@ -521,9 +531,9 @@ function addSkinIcons(pNum) {
     document.getElementById('skinListP' + pNum).innerHTML = ''; //clear everything before adding
     let charInfo;
     if (pNum == 1) { //ahh the classic 'which character am i' check
-        charInfo = getJson("Character Info/" + charP1);
+        charInfo = getTextJson("Character Info/" + charP1);
     } else {
-        charInfo = getJson("Character Info/" + charP2);
+        charInfo = getTextJson("Character Info/" + charP2);
     }
 
 
@@ -739,12 +749,20 @@ function changeBestOf() {
         currentBestOf = "Best of 5";
         theOtherBestOf1 = document.getElementById("bo3Div");
         theOtherBestOf2 = document.getElementById("boCrews");
+        const winText = document.getElementsByClassName("winText");
+        for (let i = 0; i < winText.length; i++) {
+            winText[i].innerHTML = "Wins";
+        }
         // p1Win3.style.display = "block";
         // p2Win3.style.display = "block";
     } else if (this == document.getElementById("bo3Div")) {
         currentBestOf = "Best of 3";
         theOtherBestOf1 = document.getElementById("bo5Div");
         theOtherBestOf2 = document.getElementById("boCrews");
+        const winText = document.getElementsByClassName("winText");
+        for (let i = 0; i < winText.length; i++) {
+            winText[i].innerHTML = "Wins";
+        }
         // p1Win3.style.display = "none";
         // p2Win3.style.display = "none";
     } else if (this == document.getElementById("boCrews")) {
@@ -755,6 +773,10 @@ function changeBestOf() {
         crewsNextRound = null;
         crewsStocksPlayer = null;
         crewsStocksLeft = 0;
+        const winText = document.getElementsByClassName("winText");
+        for (let i = 0; i < winText.length; i++) {
+            winText[i].innerHTML = "Stocks";
+        }
         // p1Win3.style.display = "none";
         // p2Win3.style.display = "none";
     }
@@ -945,16 +967,16 @@ function writeScoreboard() {
     let scoreboardJson = {
         p1Name: p1NameInp.value,
         p1Team: p1TagInp.value,
-        p1Character: portPrioSwapped ? charP2 : charP1,
-        p1Skin: portPrioSwapped ? skinP2 : skinP1,
-        p1Color: portPrioSwapped ? colorP2 : colorP1,
+        p1Character: charP1,
+        p1Skin: skinP1,
+        p1Color: colorP1,
         p1Score: checkScore(p1Score),
         p1WL: currentP1WL,
         p2Name: p2NameInp.value,
         p2Team: p2TagInp.value,
-        p2Character: portPrioSwapped ? charP1 : charP2,
-        p2Skin: portPrioSwapped ? skinP1 : skinP2,
-        p2Color: portPrioSwapped ? colorP1 : colorP2,
+        p2Character: charP2,
+        p2Skin: skinP2,
+        p2Color: colorP2,
         p2Score: checkScore(p2Score),
         p2WL: currentP2WL,
         round: roundInp.value,
@@ -969,7 +991,7 @@ function writeScoreboard() {
     };
 
     let data = JSON.stringify(scoreboardJson, null, 2);
-    fs.writeFile(mainPath + "/ScoreboardInfo.json", data, noop);
+    fs.writeFile(textPath + "/ScoreboardInfo.json", data, noop);
 
     let nextRound = '';
 
@@ -1012,42 +1034,42 @@ function writeScoreboard() {
 
 
     //simple .txt files
-    fs.writeFile(mainPath + "/Simple Texts/Player 1.txt", texts.p1Name, noop);
-    fs.writeFile(mainPath + "/Simple Texts/Player 2.txt", texts.p2Name, noop);
+    fs.writeFile(textPath + "/Simple Texts/Player 1.txt", texts.p1Name, noop);
+    fs.writeFile(textPath + "/Simple Texts/Player 2.txt", texts.p2Name, noop);
 
-    fs.writeFile(mainPath + "/Simple Texts/Round.txt", texts.round, noop);
-    fs.writeFile(mainPath + "/Simple Texts/Tournament Name.txt", texts.tournamentName, noop);
+    fs.writeFile(textPath + "/Simple Texts/Round.txt", texts.round, noop);
+    fs.writeFile(textPath + "/Simple Texts/Tournament Name.txt", texts.tournamentName, noop);
 
-    fs.writeFile(mainPath + "/Simple Texts/BestOf.txt", texts.currentBestOf, noop);
+    fs.writeFile(textPath + "/Simple Texts/BestOf.txt", texts.currentBestOf, noop);
 
-    fs.writeFile(mainPath + "/Simple Texts/Caster 1 Name.txt", texts.caster1Name, noop);
-    fs.writeFile(mainPath + "/Simple Texts/Caster 1 Twitter.txt", texts.caster1Twitter, noop);
-    fs.writeFile(mainPath + "/Simple Texts/Caster 1 Twitch.txt", texts.caster1Twitch, noop);
+    fs.writeFile(textPath + "/Simple Texts/Caster 1 Name.txt", texts.caster1Name, noop);
+    fs.writeFile(textPath + "/Simple Texts/Caster 1 Twitter.txt", texts.caster1Twitter, noop);
+    fs.writeFile(textPath + "/Simple Texts/Caster 1 Twitch.txt", texts.caster1Twitch, noop);
 
-    fs.writeFile(mainPath + "/Simple Texts/Caster 2 Name.txt", texts.caster2Name, noop);
-    fs.writeFile(mainPath + "/Simple Texts/Caster 2 Twitter.txt", texts.caster2Twitter, noop);
-    fs.writeFile(mainPath + "/Simple Texts/Caster 2 Twitch.txt", texts.caster2Twitch, noop);
+    fs.writeFile(textPath + "/Simple Texts/Caster 2 Name.txt", texts.caster2Name, noop);
+    fs.writeFile(textPath + "/Simple Texts/Caster 2 Twitter.txt", texts.caster2Twitter, noop);
+    fs.writeFile(textPath + "/Simple Texts/Caster 2 Twitch.txt", texts.caster2Twitch, noop);
 
-    fs.writeFile(mainPath + "/Simple Texts/Player 1 Score.txt", texts.scoreP1, noop);
-    fs.writeFile(mainPath + "/Simple Texts/Player 2 Score.txt", texts.scoreP2, noop);
+    fs.writeFile(textPath + "/Simple Texts/Player 1 Score.txt", texts.scoreP1, noop);
+    fs.writeFile(textPath + "/Simple Texts/Player 2 Score.txt", texts.scoreP2, noop);
 
-    fs.writeFile(mainPath + "/Simple Texts/Set History.txt", texts.setHistory, noop);
+    fs.writeFile(textPath + "/Simple Texts/Set History.txt", texts.setHistory, noop);
 
-    fs.writeFile(mainPath + "/Simple Texts/Up Next.txt", texts.nextRound, noop);
+    fs.writeFile(textPath + "/Simple Texts/Up Next.txt", texts.nextRound, noop);
 
-    fs.copyFile(`${charPath}/Portraits/${portPrioSwapped ? charP2 : charP1}/${portPrioSwapped ? skinP2 : skinP1}.png`, `${playerPath}/characterP1.png`, () => {
+    fs.copyFile(`${charPath}/Portraits/${charP1}/${skinP1}.png`, `${playerPath}/characterP1.png`, () => {
         fs.utimesSync(`${playerPath}/characterP1.png`, new Date(), new Date());
     });
 
-    fs.copyFile(`${charPath}/Portraits/${portPrioSwapped ? charP1 : charP2}/${portPrioSwapped ? skinP1 : skinP2}.png`, `${playerPath}/characterP2.png`, () => {
+    fs.copyFile(`${charPath}/Portraits/${charP2}/${skinP2}.png`, `${playerPath}/characterP2.png`, () => {
         fs.utimesSync(`${playerPath}/characterP2.png`, new Date(), new Date());
     });
 
-    fs.copyFile(`${playerPath}/port${portPrioSwapped ? portP2 : portP1}.png`, `${playerPath}/portP1.png`, () => {
+    fs.copyFile(`${playerPath}/port${portP1}.png`, `${playerPath}/portP1.png`, () => {
         fs.utimesSync(`${playerPath}/portP1.png`, new Date(), new Date());
     });
 
-    fs.copyFile(`${playerPath}/port${portPrioSwapped ? portP1 : portP2}.png`, `${playerPath}/portP2.png`, () => {
+    fs.copyFile(`${playerPath}/port${portP2}.png`, `${playerPath}/portP2.png`, () => {
         fs.utimesSync(`${playerPath}/portP2.png`, new Date(), new Date());
     });
 }
@@ -1063,6 +1085,10 @@ function updatePlayers(game) {
     player1Data = game.players[0];
     player2Data = game.players[1];
 
+    if (portPrioSwapped) {
+        [player1Data, player2Data] = [player2Data, player1Data];
+    }
+
     charP1 = player1Data.characterName;
     skinP1 = player1Data.characterColor;
     portP1 = player1Data.port;
@@ -1071,19 +1097,11 @@ function updatePlayers(game) {
     skinP2 = player2Data.characterColor;
     portP2 = player2Data.port;
 
-    if (portPrioSwapped) {
-        charImgChange(charImgP1, player2Data.characterName, player2Data.characterColor);
-        charImgChange(charImgP2, player1Data.characterName, player1Data.characterColor);
+    charImgChange(charImgP1, player1Data.characterName, player1Data.characterColor);
+    charImgChange(charImgP2, player2Data.characterName, player2Data.characterColor);
 
-        updateColor(null, 1, player2Data.port);
-        updateColor(null, 2, player1Data.port);
-    } else {
-        charImgChange(charImgP1, player1Data.characterName, player1Data.characterColor);
-        charImgChange(charImgP2, player2Data.characterName, player2Data.characterColor);
-
-        updateColor(null, 1, player1Data.port);
-        updateColor(null, 2, player2Data.port);
-    }
+    updateColor(null, 1, player1Data.port);
+    updateColor(null, 2, player2Data.port);
 
     if (p1Auto.checked) {
         if (player1Data.displayName != "") {
@@ -1132,33 +1150,31 @@ function updateScore(game) {
     player1Data = game.players[0];
     player2Data = game.players[1];
 
+    if (portPrioSwapped) {
+        [player1Data, player2Data] = [player2Data, player1Data];
+    }
+
     if (currentBestOf.toLowerCase() == "crews") {
         let stocksP1 = game.data.stats.stocks.filter(stock => stock.playerIndex == player1Data.port - 1 && stock.endFrame != null).length;
         let stocksP2 = game.data.stats.stocks.filter(stock => stock.playerIndex == player2Data.port - 1 && stock.endFrame != null).length;
 
-        let stocksLeftPlayer;
-        if (portPrioSwapped) {
-            [stocksP1, stocksP2] = [stocksP2, stocksP1]
-            stocksLeftPlayer = crewsStocksPlayer == 1 ? 2 : 1;
-        }
-
         scoreP1 = parseInt(scoreP1) - stocksP1;
-        if (stocksLeftPlayer == 1) {
+        if (crewsStocksPlayer == 1) {
             scoreP1 += crewsStocksLeft
         }
         p1Score.value = scoreP1;
 
         scoreP2 = parseInt(scoreP2) - stocksP2;
-        if (stocksLeftPlayer == 2) {
+        if (crewsStocksPlayer == 2) {
             scoreP2 += crewsStocksLeft
         }
         p2Score.value = scoreP2;
 
         if (player1Data.gameResult == "winner") {
-            crewsStocksPlayer = portPrioSwapped ? 2 : 1;
+            crewsStocksPlayer = 1;
             crewsStocksLeft = stocksP1;
         } else if (player2Data.gameResult == "winner") {
-            crewsStocksPlayer = portPrioSwapped ? 1 : 2;
+            crewsStocksPlayer = 2;
             crewsStocksLeft = stocksP2;
         }
 
@@ -1172,9 +1188,9 @@ function updateScore(game) {
             }
         }
     } else {
-        if (player1Data.gameResult == "winner" || portPrioSwapped) {
+        if (player1Data.gameResult == "winner") {
             giveWinP1()
-        } else if (player2Data.gameResult == "winner" || portPrioSwapped) {
+        } else if (player2Data.gameResult == "winner") {
             giveWinP2()
         }
     }
@@ -1213,10 +1229,9 @@ function newSet() {
     p2Score.value = 0;
 
     setTimeout(() => {
-        scoreP1 = 0;
-        scoreP2 = 0;
-        p1Score.value = scoreP1;
-        p2Score.value = scoreP2;
+        scoreP1 = p1Score.value;
+        scoreP2 = p2Score.value;
+
         if (startggBracket != null) {
             fetchPlayers();
         }
@@ -1349,7 +1364,7 @@ async function getPGInfo(name1, name2) {
     const winsP2 = playerNumber == 2 ? wins : matches - wins;
 
     setHistory = `${winsP1} - ${winsP2}`;
-    fs.writeFileSync(mainPath + "/Simple Texts/Set History.txt", setHistory);
+    fs.writeFileSync(textPath + "/Simple Texts/Set History.txt", setHistory);
 }
 
 async function pgFetchSearch(name) {
@@ -1548,8 +1563,8 @@ async function createThumbnail() {
         canvas.height = 1080;
         const ctx = canvas.getContext('2d');
 
-        char1Info = getJson("Character Info/" + videoData.charP1);
-        char2Info = getJson("Character Info/" + videoData.charP2);
+        char1Info = getTextJson("Character Info/" + videoData.charP1);
+        char2Info = getTextJson("Character Info/" + videoData.charP2);
 
         const imgBackground = await loadImage(`${overlayPath}/VS Screen/background.png`);
         const imgVSMelee = await loadImage(`${overlayPath}/VS Screen/VS Melee.png`);
@@ -1562,7 +1577,7 @@ async function createThumbnail() {
         ctx.drawImage(imgChar1, ((-imgChar1.width * char1Info.Left.scale) / 2) + 300 + char1Info.Left.x, ((-imgChar1.height * char1Info.Left.scale) / 2) + char1Info.Left.y, imgChar1.width * char1Info.Left.scale, imgChar1.height * char1Info.Left.scale);
         ctx.drawImage(imgChar2, 1920 + ((-imgChar2.width * char2Info.Right.scale) / 2) - 150 + char2Info.Right.x, ((-imgChar2.height * char2Info.Right.scale) / 2) + char2Info.Right.y, imgChar2.width * char2Info.Right.scale, imgChar2.height * char2Info.Right.scale);
 
-        const fontData = getJson("font");
+        const fontData = getTextJson("font");
 
         const fontName = fontData.font.split('.')[0];
 
@@ -1617,7 +1632,7 @@ async function loadImage(src) {
     });
 }
 
-async function makeReplay() {
+async function createReplay() {
     try {
         if (recordingPath == null) {
             console.log("No recording path set");
@@ -1625,7 +1640,7 @@ async function makeReplay() {
         }
 
         // get now date minus setStartTime date
-        const duration = 8;
+        const duration = document.getElementById('replayDuration').value || 8;
 
         // Get the video duration
         const videoDuration = await getDuration(recordingPath);
@@ -1642,6 +1657,7 @@ async function makeReplay() {
             .output(outputFilePath)
             .on('end', () => {
                 console.log('Made replay successfully!');
+                createShort(outputFilePath);
             })
             .on('error', (error) => {
                 console.error(`Error cutting video: ${error.message}`);
@@ -1736,21 +1752,23 @@ async function toggleStartgg(v) {
 }
 
 async function swapPortPrio(v) {
-    portPrioSwapped = v.checked
+    portPrioSwapped = v.checked;
 
-    if (portPrioSwapped) {
-        charImgChange(charImgP1, player2Data.characterName, player2Data.characterColor);
-        charImgChange(charImgP2, player1Data.characterName, player1Data.characterColor);
+    [player1Data, player2Data] = [player2Data, player1Data];
 
-        updateColor(null, 1, player2Data.port);
-        updateColor(null, 2, player1Data.port);
-    } else {
-        charImgChange(charImgP1, player1Data.characterName, player1Data.characterColor);
-        charImgChange(charImgP2, player2Data.characterName, player2Data.characterColor);
+    charP1 = player1Data.characterName;
+    skinP1 = player1Data.characterColor;
+    portP1 = player1Data.port;
 
-        updateColor(null, 1, player1Data.port);
-        updateColor(null, 2, player2Data.port);
-    }
+    charP2 = player2Data.characterName;
+    skinP2 = player2Data.characterColor;
+    portP2 = player2Data.port;
+
+    charImgChange(charImgP1, player1Data.characterName, player1Data.characterColor);
+    charImgChange(charImgP2, player2Data.characterName, player2Data.characterColor);
+
+    updateColor(null, 1, player1Data.port);
+    updateColor(null, 2, player2Data.port);
 
     writeScoreboard();
 }
@@ -1801,4 +1819,111 @@ async function connectToOBS() {
     } catch (err) {
         console.error(err);
     }
+}
+
+async function createShort(input) {
+    const data = await getJson("Recordings/Shorts/coordinates");
+
+    // Output file paths
+    const centerOutput = path.join(path.dirname(input), 'center.mkv');
+    const leftOutput = path.join(path.dirname(input), 'left.mkv');
+    const leftScaledOutput = path.join(path.dirname(input), 'left_scaled.mkv');
+    const rightOutput = path.join(path.dirname(input), 'right.mkv');
+    const rightScaledOutput = path.join(path.dirname(input), 'right_scaled.mkv');
+    const finalOutput = path.join(path.dirname(input), 'output.mkv');
+
+
+    // Step 1: Crop center portion
+    ffmpeg(input)
+        .output(centerOutput)
+        .videoFilter(`crop=${data.center.w}:${data.center.h}:${data.center.x}:${data.center.y}`)
+        .on('end', () => {
+            // Step 2: Crop left portion
+            ffmpeg(input)
+                .output(leftOutput)
+                .videoFilter(`crop=${data.left.w}:${data.left.h}:${data.left.x}:${data.left.y}`)
+                .on('end', () => {
+                    // Step 3: Crop right portion
+                    ffmpeg(input)
+                        .output(rightOutput)
+                        .videoFilter(`crop=${data.right.w}:${data.right.h}:${data.right.x}:${data.right.y}`)
+                        .on('end', () => {
+
+                            let height = Math.floor(data.center.w * 16 / 9);
+                            if (height % 2 == 1) {
+                                height += 1;
+                            }
+
+                            const scaleFactor = height - data.center.h;
+
+                            let left_scaled_width = Math.floor(data.left.w * scaleFactor / data.left.h);
+                            let left_scaled_height = scaleFactor;
+
+                            if (left_scaled_width % 2 == 1) {
+                                left_scaled_width += 1;
+                            }
+
+                            if (left_scaled_height % 2 == 1) {
+                                left_scaled_height += 1;
+                            }
+
+                            ffmpeg(leftOutput)
+                                .output(leftScaledOutput)
+                                .videoFilter(`scale=${left_scaled_width}:${left_scaled_height}`)
+                                .on('error', function (err, stdout, stderr) {
+                                    if (err) {
+                                        console.log(err.message);
+                                        console.log("stdout:\n" + stdout);
+                                        console.log("stderr:\n" + stderr);
+                                        reject("Error");
+                                    }
+                                })
+                                .on('end', () => {
+
+                                    let right_scaled_width = Math.floor(data.right.w * scaleFactor / data.right.h);
+                                    let right_scaled_height = scaleFactor;
+
+                                    if (right_scaled_width % 2 == 1) {
+                                        right_scaled_width += 1;
+                                    }
+
+                                    if (right_scaled_height % 2 == 1) {
+                                        right_scaled_height += 1;
+                                    }
+
+                                    ffmpeg(rightOutput)
+                                        .output(rightScaledOutput)
+                                        .videoFilter(`scale=${right_scaled_width}:${right_scaled_height}`)
+                                        .on('end', () => {
+
+                                            // Step 4: Stack all three videos
+                                            ffmpeg()
+                                                .input(centerOutput)
+                                                .input(leftScaledOutput)
+                                                .input(rightScaledOutput)
+                                                .complexFilter(
+                                                    [
+                                                        `[0:v]pad=iw:${height}[int]`,
+                                                        `[int][1:v]overlay=0:${data.center.h}[left]`,
+                                                        `[left][2:v]overlay=W-${right_scaled_width}:${data.center.h}[stacked]`,
+                                                    ],
+                                                    'stacked'
+                                                )
+                                                .output(finalOutput)
+                                                .outputOptions([
+                                                    '-map', '0:a',              // Map the audio stream from the first input
+                                                    '-c:a', 'copy'              // Copy the audio codec
+                                                ])
+                                                .on('start', commandLine => {
+                                                    console.log('FFmpeg command:', commandLine);
+                                                })
+                                                .on('end', () => {
+                                                    console.log('Process completed successfully.');
+                                                })
+                                                .run();
+                                        }).run();
+                                }).run();
+                        }).run();
+                }).run();
+        }).run()
 }
