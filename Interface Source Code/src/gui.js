@@ -42,6 +42,7 @@ const fieldIds = [
     "slippiDirectory",
     "obsURL",
     "obsPort",
+    "startggUrl",
     "p1Tag",
     "p1Name",
     "p1Score",
@@ -68,11 +69,32 @@ const fieldIds = [
     "replayDuration"
 ]
 
+const checkboxIds = [
+    "toggleStartgg",
+    "p1Auto",
+    "pPort",
+    "p2Auto",
+    "nextAuto",
+    "allowIntro",
+    "forceWLToggle",
+    "makeUppercase",
+    "addSpace",
+    "pgStats",
+    "replayShort"
+]
+
 function saveFieldValuesToStorage() {
     for (const id of fieldIds) {
         const field = document.getElementById(id);
         if (field) {
             localStorage.setItem(id, field.value);
+        }
+    }
+
+    for (const id of checkboxIds) {
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+            localStorage.setItem(id, checkbox.checked);
         }
     }
 }
@@ -82,6 +104,19 @@ function restoreFieldValuesFromStorage() {
         const field = document.getElementById(id);
         if (field) {
             field.value = localStorage.getItem(id);
+            if (field.oninput) {
+                field.oninput(field);
+            }
+        }
+    }
+
+    for (const id of checkboxIds) {
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+            checkbox.checked = localStorage.getItem(id) === 'true';
+            if (checkbox.onclick) {
+                checkbox.onclick(checkbox);
+            }
         }
     }
 }
@@ -282,10 +317,12 @@ function init() {
     document.getElementById("bo3Div").addEventListener("click", changeBestOf);
     document.getElementById("bo5Div").addEventListener("click", changeBestOf);
     document.getElementById("boCrews").addEventListener("click", changeBestOf);
+    document.getElementById("boEndless").addEventListener("click", changeBestOf);
     //set initial value
-    document.getElementById("bo3Div").style.color = "var(--text2)";
-    document.getElementById("bo5Div").style.backgroundImage = "linear-gradient(to top, #575757, #00000000)";
+    document.getElementById("bo3Div").style.color = "linear-gradient(to top, #575757, #00000000)";
+    document.getElementById("bo5Div").style.backgroundImage = "var(--text2)";
     document.getElementById("boCrews").style.backgroundImage = "var(--text2)";
+    document.getElementById("boEndless").style.backgroundImage = "var(--text2)";
 
 
     //check if the round is grand finals
@@ -798,30 +835,30 @@ function getTextWidth(text, font) {
 function changeBestOf() {
     let theOtherBestOf1; //we always gotta know
     let theOtherBestOf2; //we always gotta know
+    let theOtherBestOf3; //we always gotta know
     if (this == document.getElementById("bo5Div")) {
         currentBestOf = "Best of 5";
         theOtherBestOf1 = document.getElementById("bo3Div");
         theOtherBestOf2 = document.getElementById("boCrews");
+        theOtherBestOf3 = document.getElementById("boEndless");
         const winText = document.getElementsByClassName("winText");
         for (let i = 0; i < winText.length; i++) {
             winText[i].innerHTML = "Wins";
         }
-        // p1Win3.style.display = "block";
-        // p2Win3.style.display = "block";
     } else if (this == document.getElementById("bo3Div")) {
         currentBestOf = "Best of 3";
         theOtherBestOf1 = document.getElementById("bo5Div");
         theOtherBestOf2 = document.getElementById("boCrews");
+        theOtherBestOf3 = document.getElementById("boEndless");
         const winText = document.getElementsByClassName("winText");
         for (let i = 0; i < winText.length; i++) {
             winText[i].innerHTML = "Wins";
         }
-        // p1Win3.style.display = "none";
-        // p2Win3.style.display = "none";
     } else if (this == document.getElementById("boCrews")) {
         currentBestOf = "Crews";
         theOtherBestOf1 = document.getElementById("bo3Div");
         theOtherBestOf2 = document.getElementById("bo5Div");
+        theOtherBestOf3 = document.getElementById("boEndless");
         roundInp.value = "Game 1";
         crewsNextRound = null;
         crewsStocksPlayer = null;
@@ -830,8 +867,15 @@ function changeBestOf() {
         for (let i = 0; i < winText.length; i++) {
             winText[i].innerHTML = "Stocks";
         }
-        // p1Win3.style.display = "none";
-        // p2Win3.style.display = "none";
+    } else if (this == document.getElementById("boEndless")) {
+        currentBestOf = "Endless";
+        theOtherBestOf1 = document.getElementById("bo3Div");
+        theOtherBestOf2 = document.getElementById("bo5Div");
+        theOtherBestOf3 = document.getElementById("boCrews");
+        const winText = document.getElementsByClassName("winText");
+        for (let i = 0; i < winText.length; i++) {
+            winText[i].innerHTML = "Wins";
+        }
     }
 
     //change the color and background of the buttons
@@ -841,6 +885,8 @@ function changeBestOf() {
     theOtherBestOf1.style.backgroundImage = "var(--bg4)";
     theOtherBestOf2.style.color = "var(--text2)";
     theOtherBestOf2.style.backgroundImage = "var(--bg4)";
+    theOtherBestOf3.style.color = "var(--text2)";
+    theOtherBestOf3.style.backgroundImage = "var(--bg4)";
 }
 
 
@@ -1706,7 +1752,7 @@ async function loadImage(src) {
 
 async function createReplay() {
     try {
-        if (recordingPath == null) {
+        if (recordingPath == null || recordingPath == '') {
             console.log("No recording path set");
             return;
         }
@@ -1737,7 +1783,9 @@ async function createReplay() {
             .output(outputFilePath)
             .on('end', () => {
                 console.log('Made replay successfully!');
-                createShort(outputFilePath, true);
+                if (document.getElementById('replayShort').checked) {
+                    createShort(outputFilePath, true);
+                }
             })
             .on('error', (error) => {
                 console.error(`Error cutting video: ${error.message}`);
@@ -1833,6 +1881,10 @@ async function toggleStartgg(v) {
 
 async function swapPortPrio(v) {
     portPrioSwapped = v.checked;
+
+    if (player1Data == null || player2Data == null) {
+        return;
+    }
 
     [player1Data, player2Data] = [player2Data, player1Data];
 

@@ -5,9 +5,9 @@
   <meta charset="UTF-8">
   <title>Melee Stream Tool</title>
   <link rel="stylesheet" href="index.css">
-  <script src="gui.js" defer></script>
   <script src="compute.js" defer></script>
   <script src="autoloader.js" defer></script>
+  <script src="gui.js" defer></script>
   <script src="mousetrap.min.js" defer></script>
 </head>
 
@@ -36,8 +36,8 @@
       </div>
 
       <div>
-        <input type="text" style="width: 525px; display:inline;" placeholder="Set the start.gg bracket url"
-          oninput="setStartggBracketUrl(this.value)">
+        <input type="text" id="startggUrl" style="width: 525px; display:inline;"
+          placeholder="Set the start.gg bracket url" oninput="setStartggBracketUrl(this.value)">
         <span>Toggle fetching current match</span>
         <input type="checkbox" id="toggleStartgg" tabindex="6" title="Whether to fetch the current start.gg match"
           onclick="toggleStartgg(this)">
@@ -77,7 +77,7 @@
                 </div>
                 <div class="pCheckbox pPort">
                   <span>Lower port prio</span>
-                  <input type="checkbox" id="pPort" tabindex="7" onchange="swapPortPrio(this)"
+                  <input type="checkbox" id="pPort" tabindex="7" onclick="swapPortPrio(this)"
                     title="Check this if this player should be the lower port.">
                 </div>
               </div>
@@ -214,9 +214,11 @@
           <div id="bo3Div" class="bestOfBox">Best of 3</div>
           <div id="bo5Div" class="bestOfBox">Best of 5</div>
           <div id="boCrews" class="bestOfBox">Crews</div>
-          <input type="button" value="NEW" onclick="newSet()">
-          <input type="button" value="END" onclick="onSetEnds()">
+          <div id="boEndless" class="bestOfBox">Endless</div>
         </div>
+
+        <input type="button" value="NEW" onclick="newSet()">
+        <input type="button" value="END" onclick="onSetEnds()">
 
         <input type="text" list="roundNames" id="roundName" class="textInput mousetrap" placeholder="Current Round"
           spellcheck="false">
@@ -346,9 +348,11 @@
         <input type="number" id="replayDuration" class="textInput mousetrap" placeholder="10"
           style="width:50px; margin-left: 10px;" spellcheck="false">
         <input type="button" value="REPLAY" onclick="createReplay()">
+        <input type="checkbox" id="replayShort" onclick="createReplay()">
+        <span>Copy as short</span>
       </div>
 
-      <input type="button" value="THUMBNAIL" style="display: inline; margin-left:170px;" onclick="createThumbnail()">
+      <input type="button" value="THUMBNAIL" style="display: inline; margin-left:70px;" onclick="createThumbnail()">
 
       <input type="button" value="SHORT" style="display: inline; margin-left:170px;"
         onclick="createShort(recordingPath)">
