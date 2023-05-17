@@ -6,8 +6,8 @@ A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-To
 
 ## Added features
 * Automatically sets the characters, skin and ports based on the Slippi file.
-* Automatically fetches the players and round of the current set from start.gg
-* Automatically fetches avatars and set history from PGStats
+* Automatically fetches the players and round of the current set from start.gg.
+* Automatically fetches avatars and set history from PGStats.
 * Automatically keeps track of score. Detects handwarmers. Crews mode for decreasing stocks.
 * Automatically change the scene in OBS when a game starts, a game ends, or a set ends.
 * Automatically cuts out vods for each set from an ongoing recording. Generates a thumbnail as well.
@@ -17,26 +17,11 @@ A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-To
 
 ---
 
-## Setup
+## Install
 
-1. Download or clone this project.
-2. Install [Node](https://nodejs.org/en) (use the left LTS option).
-
-You can now click on `SETUP.bat` to install the dependencies. After the initial setup you can click on `START.bat` to start the app.
-
-If you don't want to use the batch files you can continue the setup manually:
-
-3. Open a terminal in the app directory (right click -> Open in Terminal).
-4. Type `npm install --global yarn` to install Yarn.
-5. Type `npm install -g electron` to install Electorn.
-6. Type `npm install` to install the dependencies. This takes a while. You can ignore warnings.
-7. Type `npm start` to start the app.
-
----
-
-## Disclaimer
-
-Shoutouts to Readek for not only making the base of this tool, but creating a fancy looking interface as well. I myself was too lazy to keep it fancy, and focused only on functionality. It works, so mission accomplished, but because of that the UI is not great. It looks ugly, you don't get any confirmation when changing fields or clicking buttons, and the UI for changing the scenes is dumb. If you want to improve this your contributions are appreciated.
+1. Download the latest [release](https://github.com/Sheepolution/Melee-Stream-Tool/releases).
+2. Unzip the files.
+3. Start `Advanced Melee Stream Multi-Tool.exe`.
 
 ---
 
@@ -184,17 +169,33 @@ For the video backgrounds, you can either replace them with other `.webm` files 
 
 And if you're brave enough to dive into the code, I tried my best to document everything inside the code so you have an easier time, so go grab those `html` and `js` files!
 
+#### Where is the VS screen that the original tool had? 
+
+I changed the coordinates of the characters in the JSON files for the thumbnail feature. Because of this I ruined the VS screen, and I personally didn't care about.
+
 ---
 
-## FAQ
+## Disclaimer
 
-> Q: Where is the VS screen that the original tool had? 
+Shoutouts to Readek for not only making the base of this tool, but creating a fancy looking interface as well. I myself was too lazy to keep it fancy, and focused only on functionality. It works, so mission accomplished, but because of that the UI is not great. It looks ugly, you don't get any confirmation when changing fields or clicking buttons, and the UI for changing the scenes is dumb. If you want to improve this your contributions are appreciated.
 
-A: I changed the coordinates of the characters in the JSON files for the thumbnail. Because of this I ruined the VS screen, and I personally didn't care about.
+---
 
-> Q: Why is there no .exe?
+## Developing and building
 
-A: You can generate this yourself using `npm run pack` or `npm run dist`. I just didn't want to bother with releases, and creating the single `Melee ST.exe` like how the original tool had it [has proven to be difficult](https://github.com/Readek/Melee-Stream-Tool/issues/8).
+If you want to make changes to the tool, you can do so by following these steps:
+
+1. Download or clone this project.
+2. Install [Node](https://nodejs.org/en) (use the left LTS option).
+3. Open a terminal in the app directory (right click -> Open in Terminal).
+4. Type `npm install --global yarn` to install Yarn.
+5. Type `npm install -g electron` to install Electorn.
+6. Type `npm install` to install the dependencies. This takes a while. You can ignore warnings.
+7. Type `npm start` to start the app.
+
+Most of the code is in [gui.js](app/src/gui.js).
+
+You can use `npm run dist` to build a new executable.
 
 ---
 

@@ -6,12 +6,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "dist": "electron-builder --config electron-builder.json"
   },
   "keywords": [],
   "author": {
@@ -48,6 +43,7 @@
   "dependencies": {
     "@slippi/slippi-js": "^6.6.1",
     "chokidar": "^3.5.3",
+    "dotenv": "^16.0.3",
     "electron-squirrel-startup": "^1.0.0",
     "fluent-ffmpeg": "^2.1.2",
     "jimp": "^0.22.7",

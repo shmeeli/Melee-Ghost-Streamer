@@ -1,0 +1,21 @@
+{
+    "appId": "com.sheepolution.ameleesmt",
+    "productName": "Advanced Melee Stream Multi-Tool",
+    "directories": {
+        "output": "dist"
+    },
+    "files": [
+        "src/**/*",
+        "src/main.js",
+        "package.json"
+    ],
+    "win": {
+        "target": "portable"
+    },
+    "nsis": {
+        "oneClick": false,
+        "perMachine": false,
+        "allowElevation": true,
+        "allowToChangeInstallationDirectory": true
+    }
+}

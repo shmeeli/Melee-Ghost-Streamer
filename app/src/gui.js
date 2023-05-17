@@ -28,11 +28,16 @@ obs.on('ConnectionError', (err) => {
     console.error('Failed to connect: ' + err);
 });
 
-const mainPath = path.join(__dirname, '..', '..', 'resources');
-const textPath = path.join(__dirname, '..', '..', 'resources', 'Texts');
-const charPath = path.join(__dirname, '..', '..', 'resources', 'Characters');
-const recordingsPath = path.join(__dirname, '..', '..', 'resources', 'Recordings');
-const playerPath = path.join(__dirname, '..', '..', 'resources', 'Players');
+
+const rootPath = process.env.DEV_ENV ? path.join(__dirname, '..', '..')
+    : process.platform == 'win32' ? process.env.PORTABLE_EXECUTABLE_DIR
+        : path.dirname(process.env.APPIMAGE);
+
+const mainPath = path.join(rootPath, 'resources');
+const textPath = path.join(rootPath, 'resources', 'Texts');
+const charPath = path.join(rootPath, 'resources', 'Characters');
+const recordingsPath = path.join(rootPath, 'resources', 'Recordings');
+const playerPath = path.join(rootPath, 'resources', 'Players');
 
 const noop = () => { };
 
