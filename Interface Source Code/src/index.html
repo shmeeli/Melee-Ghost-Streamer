@@ -21,7 +21,7 @@
 
     <div id="overlay">
 
-      <input type="text" style="width: 1000px;" placeholder="Set your Slippi replay folder"
+      <input type="text" id="slippiDirectory" style="width: 1000px;" placeholder="Set your Slippi replay folder"
         oninput="setDirectory(this.value)">
 
       <input type="text" style="width: 1000px;" placeholder="Set your OBS mkv recording path"
@@ -343,14 +343,15 @@
       <hr>
 
       <div id="replay" class="replay">
-        <input type="number" id="replayDuration" class="textInput mousetrap" placeholder="8"
+        <input type="number" id="replayDuration" class="textInput mousetrap" placeholder="10"
           style="width:50px; margin-left: 10px;" spellcheck="false">
         <input type="button" value="REPLAY" onclick="createReplay()">
       </div>
 
       <input type="button" value="THUMBNAIL" style="display: inline; margin-left:170px;" onclick="createThumbnail()">
 
-      <input type="button" value="SHORT" style="display: inline; margin-left:170px;" onclick="createShort()">
+      <input type="button" value="SHORT" style="display: inline; margin-left:170px;"
+        onclick="createShort(recordingPath)">
 
       <div id="botBar">
         <div id="updateRegion" class="botRegion" title="Save current info to the json file. [Shortcut: Enter]">

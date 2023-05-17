@@ -28,10 +28,8 @@ function wasHandwarmers(game) {
 
     if (game.finalStats.overall.every(t => t.totalDamage < 50)) {
         score += 1;
-        console.log(score);
     } else {
         score -= 1;
-        console.log(score);
     }
 
     // Is pause enabled?
@@ -40,11 +38,9 @@ function wasHandwarmers(game) {
         // Was the game ended with lras?
         if (game.parser.gameEnd.gameEndMethod == 7) {
             score += 1;
-            console.log(score);
         } else {
             // If this was handwarmers it's weird that they didn't use lras
             score -= 1;
-            console.log(score);
         }
 
 
@@ -54,23 +50,19 @@ function wasHandwarmers(game) {
         game.finalStats.stocks.forEach((stock) => {
             if (stock.playerIndex == 0) {
                 stocksPlayer1 += 1;
-                console.log(score);
             } else {
                 stocksPlayer2 += 1;
-                console.log(score);
             }
         });
 
         // Checking if the lras was not for the last stock.
         if (stocksPlayer1 < startStocks - 1 && stocksPlayer2 < startStocks - 1) {
             score += 2;
-            console.log(score);
         }
     } else {
         if (startStocks > 2) {
             if (game.finalStats.overall.every(t => t.killCount <= 1)) {
                 score += 1;
-                console.log(score);
             }
         }
     }
@@ -79,11 +71,8 @@ function wasHandwarmers(game) {
         // Check if the game's duration was less than 45 seconds
         if ((game.metadata.lastFrame + 123) / 60 < 45) {
             score += 1;
-            console.log(score);
         }
     }
-
-    console.log(score);
 
     return score >= 2;
 }

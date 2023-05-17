@@ -32,10 +32,59 @@ const mainPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources');
 const textPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Texts');
 const charPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Characters');
 const overlayPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Overlay');
+const recordingsPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Recordings');
 const fontPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Fonts');
 const playerPath = path.join(__dirname, '..', '..', 'Stream Tool', 'Resources', 'Players');
 
 const noop = () => { };
+
+const fieldIds = [
+    "slippiDirectory",
+    "obsURL",
+    "obsPort",
+    "p1Tag",
+    "p1Name",
+    "p1Score",
+    "p2Tag",
+    "p2Name",
+    "p2Score",
+    "roundName",
+    "tournamentName",
+    "cName1",
+    "cTwitter1",
+    "cTwitch1",
+    "cName2",
+    "cTwitter2",
+    "cTwitch2",
+    "nextP1",
+    "nextP2",
+    "nextRound",
+    "sceneGameStart",
+    "sceneGameStartDelay",
+    "sceneGameEnd",
+    "sceneGameEndDelay",
+    "sceneSetEnd",
+    "sceneSetEndDelay",
+    "replayDuration"
+]
+
+function saveFieldValuesToStorage() {
+    for (const id of fieldIds) {
+        const field = document.getElementById(id);
+        if (field) {
+            localStorage.setItem(id, field.value);
+        }
+    }
+}
+
+function restoreFieldValuesFromStorage() {
+    for (const id of fieldIds) {
+        const field = document.getElementById(id);
+        if (field) {
+            field.value = localStorage.getItem(id);
+        }
+    }
+}
 
 //yes we all like global variables
 let charP1 = "Random";
@@ -106,6 +155,10 @@ const p2W = document.getElementById('p2W');
 const p2L = document.getElementById('p2L');
 
 const roundInp = document.getElementById('roundName');
+roundInp.onchange = () => {
+    localStorage.setItem('roundName', roundInp.value);
+}
+
 const forceWL = document.getElementById('forceWLToggle');
 const makeUppercase = document.getElementById('makeUppercase');
 const addSpace = document.getElementById('addSpace');
@@ -149,6 +202,7 @@ let startggBracket;
 let portPrioSwapped = false;
 
 let videoData;
+let cachedVideoData;
 
 let obsConnected = false;
 let sceneSwitchTimeout;
@@ -369,7 +423,6 @@ function loadColors(pNum) {
 }
 
 function updateColor(e, n, c) {
-    console.log(n, c);
     let pNum; //you've seen this one enough already, right?
     if (!n) {
         if (this.parentElement.parentElement == document.getElementById("p1Color")) {
@@ -1025,7 +1078,6 @@ function writeScoreboard() {
 
     if (makeUppercase.checked || addSpace.checked) {
         for (let [key, value] of Object.entries(texts)) {
-            console.log(value);
             value = makeUppercase.checked ? value.toUpperCase() : value;
             value = addSpace.checked ? value + " " : value;
             texts[key] = value;
@@ -1072,6 +1124,8 @@ function writeScoreboard() {
     fs.copyFile(`${playerPath}/port${portP2}.png`, `${playerPath}/portP2.png`, () => {
         fs.utimesSync(`${playerPath}/portP2.png`, new Date(), new Date());
     });
+
+    saveFieldValuesToStorage();
 }
 
 function updatePlayers(game) {
@@ -1117,25 +1171,6 @@ function updatePlayers(game) {
 
     if (!setStartTime || !setOfficiallyStarted) {
         setStartTime = new Date();
-    } else {
-        if (videoData != null) {
-            if (!videoData.charsP1.includes(charP1)) {
-                videoData.charsP1.push(charP1);
-            }
-
-            if (!videoData.charsP2.includes(charP2)) {
-                videoData.charsP2.push(charP2);
-            }
-        } else {
-            videoData = {
-                charsP1: [charP1],
-                charsP2: [charP2],
-                charP1,
-                charP2,
-                skinP1,
-                skinP2,
-            }
-        }
     }
 
     console.log("Updating players")
@@ -1146,6 +1181,25 @@ function updatePlayers(game) {
 function updateScore(game) {
 
     setOfficiallyStarted = true;
+
+    if (videoData != null) {
+        if (!videoData.charsP1.includes(charP1)) {
+            videoData.charsP1.push(charP1);
+        }
+
+        if (!videoData.charsP2.includes(charP2)) {
+            videoData.charsP2.push(charP2);
+        }
+    } else {
+        videoData = {
+            charsP1: [charP1],
+            charsP2: [charP2],
+            charP1,
+            charP2,
+            skinP1,
+            skinP2,
+        }
+    }
 
     player1Data = game.players[0];
     player2Data = game.players[1];
@@ -1223,10 +1277,11 @@ function updateScore(game) {
 
 function newSet() {
     setOfficiallyStarted = false;
-    setStartTime = null;
 
     p1Score.value = 0;
     p2Score.value = 0;
+
+    videoData = null
 
     setTimeout(() => {
         scoreP1 = p1Score.value;
@@ -1249,9 +1304,11 @@ function onSetEnds() {
         videoData.p1Name = p1NameInp.value;
         videoData.p2Name = p2NameInp.value;
         videoData.round = roundInp.value;
-        videoData.startTime = setStartTime;
         videoData.tournamentName = document.getElementById('tournamentName').value;
 
+        // Clone videoData to cachedVideoData
+        cachedVideoData = JSON.parse(JSON.stringify(videoData));
+        cachedVideoData.startTime = setStartTime;
 
         cutVideo();
     }
@@ -1499,7 +1556,7 @@ async function cutVideo() {
 
         // get now date minus setStartTime date
         const now = new Date().getTime();
-        const setDuration = (now - videoData.startTime.getTime()) / 1000;
+        const setDuration = (now - cachedVideoData.startTime.getTime()) / 1000;
 
         // Get the video duration
         const videoDuration = await getDuration(recordingPath);
@@ -1511,12 +1568,19 @@ async function cutVideo() {
 
         let pathString;
         if (currentBestOf.toLowerCase() == "crews") {
-            pathString = `${videoData.p1Name} vs ${videoData.p2Name} - Crews - ${videoData.tournamentName}.mkv`;
+            pathString = `${cachedVideoData.p1Name} vs ${cachedVideoData.p2Name} - Crews - ${cachedVideoData.tournamentName}.mkv`;
         } else {
-            pathString = `${videoData.p1Name} (${videoData.charsP1.join(', ')}) vs ${videoData.p2Name} (${videoData.charsP2.join(', ')}) - ${videoData.round} - ${videoData.tournamentName}.mkv`;
+            pathString = `${cachedVideoData.p1Name} (${cachedVideoData.charsP1.join(', ')}) vs ${cachedVideoData.p2Name} (${cachedVideoData.charsP2.join(', ')}) - ${cachedVideoData.round} - ${cachedVideoData.tournamentName}.mkv`;
         }
 
-        const outputFilePath = path.join(path.dirname(recordingPath), pathString);
+        const outputDirectory = path.join(path.dirname(recordingPath), 'Videos');
+
+        if (!fs.existsSync(outputDirectory)) {
+            // Create the directory recursively
+            fs.mkdirSync(outputDirectory, { recursive: true });
+        }
+
+        const outputFilePath = path.join(outputDirectory, pathString);
 
         ffmpeg(recordingPath)
             .outputOptions('-preset veryfast')
@@ -1542,8 +1606,8 @@ async function createThumbnail() {
         return;
     }
 
-    if (videoData == null) {
-        videoData = {
+    if (cachedVideoData == null) {
+        cachedVideoData = {
             charsP1: [charP1],
             charsP2: [charP2],
             charP1,
@@ -1563,21 +1627,21 @@ async function createThumbnail() {
         canvas.height = 1080;
         const ctx = canvas.getContext('2d');
 
-        char1Info = getTextJson("Character Info/" + videoData.charP1);
-        char2Info = getTextJson("Character Info/" + videoData.charP2);
+        char1Info = getTextJson("Character Info/" + cachedVideoData.charP1);
+        char2Info = getTextJson("Character Info/" + cachedVideoData.charP2);
 
-        const imgBackground = await loadImage(`${overlayPath}/VS Screen/background.png`);
-        const imgVSMelee = await loadImage(`${overlayPath}/VS Screen/VS Melee.png`);
+        const imgBackground = await loadImage(`${recordingsPath}/Thumbnails/background.png`);
+        const imgVSMelee = await loadImage(`${recordingsPath}/Thumbnails/VS Melee.png`);
 
-        const imgChar1 = await loadImage(`${charPath}/VS Screen/${videoData.charP1}/${videoData.skinP1} Left.png`);
-        const imgChar2 = await loadImage(`${charPath}/VS Screen/${videoData.charP2}/${videoData.skinP2} Right.png`);
+        const imgChar1 = await loadImage(`${charPath}/VS Screen/${cachedVideoData.charP1}/${cachedVideoData.skinP1} Left.png`);
+        const imgChar2 = await loadImage(`${charPath}/VS Screen/${cachedVideoData.charP2}/${cachedVideoData.skinP2} Right.png`);
 
         ctx.drawImage(imgBackground, 0, 0);
         ctx.drawImage(imgVSMelee, 0, 0);
         ctx.drawImage(imgChar1, ((-imgChar1.width * char1Info.Left.scale) / 2) + 300 + char1Info.Left.x, ((-imgChar1.height * char1Info.Left.scale) / 2) + char1Info.Left.y, imgChar1.width * char1Info.Left.scale, imgChar1.height * char1Info.Left.scale);
         ctx.drawImage(imgChar2, 1920 + ((-imgChar2.width * char2Info.Right.scale) / 2) - 150 + char2Info.Right.x, ((-imgChar2.height * char2Info.Right.scale) / 2) + char2Info.Right.y, imgChar2.width * char2Info.Right.scale, imgChar2.height * char2Info.Right.scale);
 
-        const fontData = getTextJson("font");
+        const fontData = getJson("Recordings/Thumbnails/font");
 
         const fontName = fontData.font.split('.')[0];
 
@@ -1591,18 +1655,18 @@ async function createThumbnail() {
         ctx.font = `${fontData.size}px ${fontName}`;
 
         // Draw text in center
-        let text = videoData.tournamentName;
+        let text = cachedVideoData.tournamentName;
         let textWidth = ctx.measureText(text).width;
         ctx.strokeText(text, (canvas.width - textWidth) / 2, 100);
         ctx.fillText(text, (canvas.width - textWidth) / 2, 100);
 
-        text = `${videoData.p1Name} VS ${videoData.p2Name}`;
+        text = `${cachedVideoData.p1Name} VS ${cachedVideoData.p2Name}`;
         textWidth = ctx.measureText(text).width;
         ctx.strokeText(text, (canvas.width - textWidth) / 2, 1050);
         ctx.fillText(text, (canvas.width - textWidth) / 2, 1050);
 
         ctx.font = `${fontData.size * 0.777}px ${fontName}`;
-        text = videoData.round;
+        text = cachedVideoData.round;
         textWidth = ctx.measureText(text).width;
         ctx.strokeText(text, (canvas.width - textWidth) / 2, 230);
         ctx.fillText(text, (canvas.width - textWidth) / 2, 230);
@@ -1610,12 +1674,20 @@ async function createThumbnail() {
         const url = canvas.toDataURL("image/png");
         let pathString;
         if (currentBestOf.toLowerCase() == "crews") {
-            pathString = `${videoData.p1Name} vs ${videoData.p2Name} - Crews - ${videoData.tournamentName}.png`;
+            pathString = `${cachedVideoData.p1Name} vs ${cachedVideoData.p2Name} - Crews - ${cachedVideoData.tournamentName}.png`;
         } else {
-            pathString = `${videoData.p1Name} (${videoData.charsP1.join(', ')}) vs ${videoData.p2Name} (${videoData.charsP2.join(', ')}) - ${videoData.round} - ${videoData.tournamentName}.png`;
+            pathString = `${cachedVideoData.p1Name} (${cachedVideoData.charsP1.join(', ')}) vs ${cachedVideoData.p2Name} (${cachedVideoData.charsP2.join(', ')}) - ${cachedVideoData.round} - ${cachedVideoData.tournamentName}.png`;
         }
 
-        const outputFilePath = path.join(path.dirname(recordingPath), pathString);
+        const outputDirectory = path.join(path.dirname(recordingPath), 'Videos');
+
+        if (!fs.existsSync(outputDirectory)) {
+            // Create the directory recursively
+            fs.mkdirSync(outputDirectory, { recursive: true });
+        }
+
+        const outputFilePath = path.join(outputDirectory, pathString);
+
         const base64Data = url.replace(/^data:image\/png;base64,/, "");
         fs.writeFileSync(outputFilePath, base64Data, 'base64');
     } catch (error) {
@@ -1640,7 +1712,7 @@ async function createReplay() {
         }
 
         // get now date minus setStartTime date
-        const duration = document.getElementById('replayDuration').value || 8;
+        const duration = document.getElementById('replayDuration').value || 10;
 
         // Get the video duration
         const videoDuration = await getDuration(recordingPath);
@@ -1648,16 +1720,24 @@ async function createReplay() {
         // Calculate the start time of the cut
         const startTime = videoDuration - duration;
 
+        const outputDirectory = path.join(path.dirname(recordingPath), 'Replays');
+
+        if (!fs.existsSync(outputDirectory)) {
+            // Create the directory recursively
+            fs.mkdirSync(outputDirectory, { recursive: true });
+        }
+
+        const outputFilePath = path.join(outputDirectory, `Replay ${new Date().toISOString().slice(0, 19).replace(/:/g, "-").replace('T', ' ')}.mkv`);
+
         // Cut the video
-        const outputFilePath = path.join(path.dirname(recordingPath), 'Replays', `Replay ${new Date().toISOString().slice(0, 19).replace(/:/g, "-").replace('T', ' ')}.mkv`);
         ffmpeg(recordingPath)
             .outputOptions('-preset veryfast')
-            .setStartTime(startTime - 1)
-            .duration(duration + 2)
+            .setStartTime(startTime)
+            .duration(duration)
             .output(outputFilePath)
             .on('end', () => {
                 console.log('Made replay successfully!');
-                createShort(outputFilePath);
+                createShort(outputFilePath, true);
             })
             .on('error', (error) => {
                 console.error(`Error cutting video: ${error.message}`);
@@ -1821,17 +1901,50 @@ async function connectToOBS() {
     }
 }
 
-async function createShort(input) {
+function getVideoDuration(filePath) {
+    return new Promise((resolve, reject) => {
+        ffmpeg.ffprobe(filePath, (error, metadata) => {
+            if (error) {
+                reject(error);
+                return;
+            }
+            const duration = metadata.format.duration;
+            resolve(duration);
+        });
+    });
+}
+
+async function createShort(input, auto) {
     const data = await getJson("Recordings/Shorts/coordinates");
 
-    // Output file paths
-    const centerOutput = path.join(path.dirname(input), 'center.mkv');
-    const leftOutput = path.join(path.dirname(input), 'left.mkv');
-    const leftScaledOutput = path.join(path.dirname(input), 'left_scaled.mkv');
-    const rightOutput = path.join(path.dirname(input), 'right.mkv');
-    const rightScaledOutput = path.join(path.dirname(input), 'right_scaled.mkv');
-    const finalOutput = path.join(path.dirname(input), 'output.mkv');
+    const duration = await getVideoDuration(input);
 
+    if (duration == "N/A") {
+        return;
+    }
+
+    const filename = path.parse(input).name.replace('Replay', '');
+
+    let directory
+
+    if (auto) {
+        directory = path.join(path.dirname(input), '..', 'Shorts')
+    } else {
+        directory = path.join(path.dirname(input))
+    }
+
+    if (!fs.existsSync(directory)) {
+        // Create the directory recursively
+        fs.mkdirSync(directory, { recursive: true });
+    }
+
+    // Output file paths
+    const centerOutput = path.join(directory, `${filename}_center.mkv`);
+    const leftOutput = path.join(directory, `${filename}_left.mkv`);
+    const leftScaledOutput = path.join(directory, `${filename}_left_scaled.mkv`);
+    const rightOutput = path.join(directory, `${filename}_right.mkv`);
+    const rightScaledOutput = path.join(directory, `${filename}_right_scaled.mkv`);
+    const finalOutput = path.join(directory, `Short ${filename}.mkv`);
 
     // Step 1: Crop center portion
     ffmpeg(input)
@@ -1856,20 +1969,27 @@ async function createShort(input) {
 
                             const scaleFactor = height - data.center.h;
 
-                            let left_scaled_width = Math.floor(data.left.w * scaleFactor / data.left.h);
-                            let left_scaled_height = scaleFactor;
+                            let leftScaledWidth, leftScaledHeight, rightScaledWidth, rightScaledHeight;
 
-                            if (left_scaled_width % 2 == 1) {
-                                left_scaled_width += 1;
+                            if (data.scaleVertical) {
+                                leftScaledWidth = Math.floor(data.left.w * scaleFactor / data.left.h);
+                                leftScaledHeight = scaleFactor;
+                            } else {
+                                leftScaledWidth = data.center.w / 2
+                                leftScaledHeight = (leftScaledWidth * data.left.h) / data.left.w;
                             }
 
-                            if (left_scaled_height % 2 == 1) {
-                                left_scaled_height += 1;
+                            if (leftScaledWidth % 2 == 1) {
+                                leftScaledWidth += 1;
+                            }
+
+                            if (leftScaledHeight % 2 == 1) {
+                                leftScaledHeight += 1;
                             }
 
                             ffmpeg(leftOutput)
                                 .output(leftScaledOutput)
-                                .videoFilter(`scale=${left_scaled_width}:${left_scaled_height}`)
+                                .videoFilter(`scale=${leftScaledWidth}:${leftScaledHeight}`)
                                 .on('error', function (err, stdout, stderr) {
                                     if (err) {
                                         console.log(err.message);
@@ -1880,20 +2000,25 @@ async function createShort(input) {
                                 })
                                 .on('end', () => {
 
-                                    let right_scaled_width = Math.floor(data.right.w * scaleFactor / data.right.h);
-                                    let right_scaled_height = scaleFactor;
-
-                                    if (right_scaled_width % 2 == 1) {
-                                        right_scaled_width += 1;
+                                    if (data.scaleVertical) {
+                                        rightScaledWidth = Math.floor(data.right.w * scaleFactor / data.right.h);
+                                        rightScaledHeight = scaleFactor;
+                                    } else {
+                                        rightScaledWidth = data.center.w / 2
+                                        rightScaledHeight = (rightScaledWidth * data.right.h) / data.left.w;
                                     }
 
-                                    if (right_scaled_height % 2 == 1) {
-                                        right_scaled_height += 1;
+                                    if (rightScaledWidth % 2 == 1) {
+                                        rightScaledWidth += 1;
+                                    }
+
+                                    if (rightScaledHeight % 2 == 1) {
+                                        rightScaledHeight += 1;
                                     }
 
                                     ffmpeg(rightOutput)
                                         .output(rightScaledOutput)
-                                        .videoFilter(`scale=${right_scaled_width}:${right_scaled_height}`)
+                                        .videoFilter(`scale=${rightScaledWidth}:${rightScaledHeight}`)
                                         .on('end', () => {
 
                                             // Step 4: Stack all three videos
@@ -1905,7 +2030,7 @@ async function createShort(input) {
                                                     [
                                                         `[0:v]pad=iw:${height}[int]`,
                                                         `[int][1:v]overlay=0:${data.center.h}[left]`,
-                                                        `[left][2:v]overlay=W-${right_scaled_width}:${data.center.h}[stacked]`,
+                                                        `[left][2:v]overlay=W-${rightScaledWidth}:${data.center.h}[stacked]`,
                                                     ],
                                                     'stacked'
                                                 )
@@ -1914,11 +2039,14 @@ async function createShort(input) {
                                                     '-map', '0:a',              // Map the audio stream from the first input
                                                     '-c:a', 'copy'              // Copy the audio codec
                                                 ])
-                                                .on('start', commandLine => {
-                                                    console.log('FFmpeg command:', commandLine);
-                                                })
                                                 .on('end', () => {
                                                     console.log('Process completed successfully.');
+
+                                                    fs.unlink(centerOutput, noop);
+                                                    fs.unlink(leftOutput, noop);
+                                                    fs.unlink(leftScaledOutput, noop);
+                                                    fs.unlink(rightOutput, noop);
+                                                    fs.unlink(rightScaledOutput, noop);
                                                 })
                                                 .run();
                                         }).run();
@@ -1927,3 +2055,5 @@ async function createShort(input) {
                 }).run();
         }).run()
 }
+
+restoreFieldValuesFromStorage();
