@@ -1618,7 +1618,11 @@ async function createThumbnail() {
         return;
     }
 
-    if (cachedVideoData == null) {
+    if (charP1 == "Random" || charP2 == "Random") {
+        return;
+    }
+
+    if (cachedVideoData == null || cachedVideoData.charP1 == "Random" || cachedVideoData.charP2 == "Random") {
         cachedVideoData = {
             charsP1: [charP1],
             charsP2: [charP2],
