@@ -1276,29 +1276,38 @@ function updateScore(game) {
 
 }
 
-function newSet() {
+function newSet(press) {
     setOfficiallyStarted = false;
-
-    p1Score.value = 0;
-    p2Score.value = 0;
 
     videoData = null
 
-    setTimeout(() => {
+    if (press) {
+        p1Score.value = 0;
+        p2Score.value = 0;
+
         scoreP1 = p1Score.value;
         scoreP2 = p2Score.value;
+        fetchPlayers();
+    } else {
+        setTimeout(() => {
+            p1Score.value = 0;
+            p2Score.value = 0;
 
-        if (startggBracket != null) {
-            fetchPlayers();
-        }
-    }, 30000);
+            scoreP1 = p1Score.value;
+            scoreP2 = p2Score.value;
+
+            if (startggBracket != null) {
+                fetchPlayers();
+            }
+        }, 5 * 1000);
+    }
 }
 
 function onSetEnds() {
     if (nextAutoInp.checked) {
         setTimeout(() => {
             applyNextInfo()
-        }, 1000 * 30);
+        }, 5 * 1000);
     }
 
     if (videoData != null) {
