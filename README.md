@@ -11,7 +11,7 @@ A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-To
 * Automatically keeps track of score. Detects handwarmers. Crews mode for decreasing stocks.
 * Automatically change the scene in OBS when a game starts, a game ends, or a set ends.
 * Automatically cuts out vods for each set from an ongoing recording. Generates a thumbnail as well.
-* Option to prepare information regarding the next set. Option to automatically apply this when the current set ends.
+* Option to prepare information for the next set. Option to automatically apply this when current set ends.
 * Option to create a replay. Option to automatically convert each replay to a vertial video (Youtube Short/TikTok).
 * Generates more text files and also images to use in OBS.
 
