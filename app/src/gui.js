@@ -195,7 +195,7 @@ const forceWL = document.getElementById('forceWLToggle');
 const makeUppercase = document.getElementById('makeUppercase');
 const addSpace = document.getElementById('addSpace');
 const pgStats = document.getElementById('pgStats');
-const setVods = document.getElementById('pgStats');
+const setVods = document.getElementById('setVods');
 
 const p1NameNextInp = document.getElementById('nextP1');
 const p2NameNextInp = document.getElementById('nextP2');
