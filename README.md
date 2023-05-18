@@ -49,7 +49,7 @@ The url to the bracket on start.gg. Enable `Toggle fetching current match` to ap
 
 ![Twitch icon](doc/startgg_stream.png)
 
-Start.gg would probably prefer you using the API for this, and that's definitely the better way to do it. The only reason I do it like this is because I didn't want to spend time learning the start.gg API, and I think it's nice the user now doesn't require an API key.
+Note that if your brackets are split over multiple pages you will need to change the url to the bracket that has the current stream match going on.
 
 ### Players
 
