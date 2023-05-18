@@ -1,6 +1,6 @@
 {
-    "appId": "com.sheepolution.ameleesmt",
-    "productName": "Advanced Melee Stream Multi-Tool",
+    "appId": "com.sheepolution.melee-ghost-streamer",
+    "productName": "Melee Ghost Streamer",
     "directories": {
         "output": "dist"
     },

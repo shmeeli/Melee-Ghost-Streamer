@@ -1,6 +1,6 @@
 ![preview](doc/full_window.png)
 
-# Advanced Melee Stream Multi-Tool
+# Melee Ghost Streamer
 
 A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-Tool) with lots of features added, mainly automation.
 
@@ -19,9 +19,9 @@ A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-To
 
 ## Install
 
-1. Download the latest [release](https://github.com/Sheepolution/Melee-Stream-Tool/releases).
+1. Download the latest [release](https://github.com/Sheepolution/Melee-Ghost-Streamer/releases).
 2. Unzip the files.
-3. Start `Advanced Melee Stream Multi-Tool.exe`.
+3. Start `Melee Ghost Streamer.exe`.
 
 ---
 
@@ -141,10 +141,9 @@ Example:
 4. You create another replay. Because you have opened the scene with the VLC source, the other three replays are removed from the playlist, and this new replay will be added. 
 
 ### Game Scoreboard.html guide
+
 These are instructions for regular OBS Studio, but I imagine you can do the same with other streaming software:
-- Get the [latest release](https://github.com/Readek/Melee-Stream-Tool/releases).
-- Extract somewhere.
-- Drag and drop `Game Scoreboard.html` into OBS, or add a new browser source in OBS pointing at the local file.
+- Drag and drop [html/Game Scoreboard.html](html/Game%20Scoreboard.html) into OBS, or add a new browser source in OBS pointing at the local file.
 - If the source looks weird, manually set the source's properties to 1920 width and 1080 height, or set your OBS canvas resolution to 1080p, or make the source fit the screen.
 - In the source's properties, change *Use custom frame rate* -> `60` (if streaming at 60fps of course).
 - **Also tick** `Refresh browser when scene becomes active`.
