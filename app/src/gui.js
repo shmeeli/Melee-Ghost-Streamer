@@ -1831,7 +1831,7 @@ async function fetchPlayers() {
     const roundElements = parent.parentNode.previousElementSibling.children;
     const roundElement = roundElements[roundIndex];
 
-    const roundName = roundElement.textContent.trim();
+    const roundName = roundElement.querySelector('[id^="title-"]').textContent.trim();
 
     roundInp.value = roundName;
 
