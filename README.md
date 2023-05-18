@@ -10,7 +10,7 @@ A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-To
 * Automatically fetches avatars and set history from PGStats.
 * Automatically keeps track of score. Detects handwarmers. Crews mode for decreasing stocks.
 * Automatically change the scene in OBS when a game starts, a game ends, or a set ends.
-* Automatically cuts out vods for each set from an ongoing recording. Generates a thumbnail as well.
+* Automatically cuts out VODs for each set from an ongoing recording. Generates a thumbnail as well.
 * Option to prepare information for the next set. Option to automatically apply this when current set ends.
 * Option to create a replay. Option to automatically convert each replay to a vertial video (Youtube Short/TikTok).
 * Generates more text files and also images to use in OBS.
@@ -35,7 +35,7 @@ Example: `C:\Users\Sheep\Documents\Slippi\Spectate`.
 
 ### OBS mkv recording path
 
-The path to your OBS recording. This will be used for making set vods and replays. Make sure your recording is an `.mkv` file, else it won't work.
+The path to your OBS recording. This will be used for making set VODs and replays. Make sure your recording is an `.mkv` file, else it won't work.
 
 Example: `C:\Users\Sheep\Videos\2023-05-17 15-49-51.mkv`.
 
@@ -55,7 +55,7 @@ Note that if your brackets are split over multiple pages you will need to change
 
 * Auto name - Whether to automatically use the Slippi Netplay name as the name of the player.
 * Lower port prio - By default the higher port priority is the first player. Enable this to swap it around.
-* NEW - Starts a new set. Resets the score and internal data for cutting the vod. Useful when switching from playing friendlies over to bracket.
+* NEW - Starts a new set. Resets the score and internal data for cutting the VOD. Useful when switching from playing friendlies over to bracket.
 * END - End a set. Use this in case the set is over but you missed a game or something.
 
 ### Next round
