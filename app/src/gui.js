@@ -879,7 +879,6 @@ function applyNextInfo() {
 
     scoreP2 = 0;
     p2Score.value = scoreP2;
-
 }
 
 
@@ -1002,14 +1001,14 @@ function forceWLtoggles() {
 
 //time to write it down
 function writeScoreboard() {
-    if (previousName1 != p1NameInp.value || previousName2 != p2NameInp.value) {
-        if (pgStats.checked) {
+    if (pgStats.checked) {
+        if (previousName1 != p1NameInp.value || previousName2 != p2NameInp.value) {
             getPGInfo(p1NameInp.value, p2NameInp.value);
         }
-    }
 
-    previousName1 = p1NameInp.value;
-    previousName2 = p2NameInp.value;
+        previousName1 = p1NameInp.value;
+        previousName2 = p2NameInp.value;
+    }
 
     let scoreboardJson = {
         p1Name: p1NameInp.value,
