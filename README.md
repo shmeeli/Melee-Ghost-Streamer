@@ -31,13 +31,13 @@ A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-To
 
 The directory where your Slippi files appear in. This is for automatic characters, port and score.
 
-Example: `C:\Users\Sheep\Documents\Slippi\Spectate`.
+Example: `C:\Users\Sheep\Documents\Slippi\Spectate`
 
 ### OBS mkv recording path
 
 The path to your OBS recording. This will be used for making set VODs and replays. Make sure your recording is an `.mkv` file, else it won't work.
 
-Example: `C:\Users\Sheep\Videos\2023-05-17 15-49-51.mkv`.
+Example: `C:\Users\Sheep\Videos\2023-05-17 15-49-51.mkv`
 
 ### OBS websocket
 
