@@ -24,9 +24,11 @@ const createWindow = () => {
   });
 
   // we dont like menus
-  mainWindow.removeMenu();
-
-  // mainWindow.webContents.openDevTools();
+  if (!process.env.DEV_ENV) {
+    mainWindow.removeMenu();
+  } else {
+    mainWindow.webContents.openDevTools();
+  }
 
   // load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));

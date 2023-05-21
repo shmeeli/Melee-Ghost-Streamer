@@ -1,0 +1,19 @@
+{
+    "skinList": [
+        "Default",
+        "Green",
+        "Orange",
+        "Red"
+    ],
+    "saga": "Ice Climbers",
+    "Left": {
+        "x": 0,
+        "y": 570,
+        "scale": 1.4
+    },
+    "Right": {
+        "x": -90,
+        "y": 450,
+        "scale": 1.0
+    }
+}

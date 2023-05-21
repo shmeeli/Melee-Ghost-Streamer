@@ -60,6 +60,9 @@ def script_update(settings):
     replay_path = obs.obs_data_get_string(settings, "path")
     source_name = obs.obs_data_get_string(settings, "source")
 
+    if len(replay_path) == 0:
+        return
+
     files = os.listdir(replay_path)
 
     for file in files:
@@ -108,6 +111,9 @@ def script_load(settings):
 
 def script_tick(seconds):
     global time_passed, old_replays, replay_path
+
+    if len(replay_path) == 0:
+        return
 
     time_passed += seconds
 

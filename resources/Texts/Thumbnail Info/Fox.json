@@ -1,0 +1,19 @@
+{
+    "skinList": [
+        "Default",
+        "Red",
+        "Blue",
+        "Green"
+    ],
+    "saga": "Star Fox",
+    "Left": {
+        "x": 120,
+        "y": 450,
+        "scale": 1.2
+    },
+    "Right": {
+        "x": -70,
+        "y": 340,
+        "scale": 1.1
+    }
+}

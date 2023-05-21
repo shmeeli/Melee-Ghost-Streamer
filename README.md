@@ -27,6 +27,8 @@ A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-To
 
 ## Interface Guide
 
+There is also a [video guide](https://youtu.be/u_fpcUT51-A)!
+
 ### Slippi replay folder
 
 The directory where your Slippi files appear in. This is for automatic characters, port and score.
@@ -64,7 +66,7 @@ Enter info here on the next round. Click APPLY to move the fields over to the pl
 
 ### Scene switching
 
-There are three groups of fields. One for starting a game, one for the end of a game, and one for the end of a set. In here you fill in the name of the scene OBS should switch to upon this event happening. Below you can enter a delay. You can add a sequence of scenes separated by a comma.
+When you have connected to OBS you can enable automated stream switching. There are three groups of fields. One for starting a game, one for the end of a game, and one for the end of a set. In here you fill in the name of the scene OBS should switch to upon this event happening. Below you can enter a delay. You can add a sequence of scenes separated by a comma.
 
 Example: After a set has ended I want to instantly go to the Player Cam scene. Then go to the Stats scene 8 seconds later. And then after another 15 seconds go to the replays.
 
@@ -72,6 +74,8 @@ Example: After a set has ended I want to instantly go to the Player Cam scene. T
 Player Cam, Stats, Replays
 0, 8, 15
 ```
+
+You can always uncheck automated stream switching if you temporarily want to disable it.
 
 ### Replays
 
@@ -147,7 +151,7 @@ These are instructions for regular OBS Studio, but I imagine you can do the same
 - If the source looks weird, manually set the source's properties to 1920 width and 1080 height, or set your OBS canvas resolution to 1080p, or make the source fit the screen.
 - In the source's properties, change *Use custom frame rate* -> `60` (if streaming at 60fps of course).
 - **Also tick** `Refresh browser when scene becomes active`.
-- Manage it all with the `Melee ST` executable.
+- Manage it all with the `Melee Ghost Streamer` executable.
 
 2 basic transitions are included in the `Resources/OBS Transitions` folder, if you don't have a transition yourself of course. To use them on OBS:
 - Add a new stinger transition.
@@ -167,10 +171,6 @@ For the overlays/images, there are PSD files for both the game scoreboard and th
 For the video backgrounds, you can either replace them with other `.webm` files or just cover them with an image overlay.
 
 And if you're brave enough to dive into the code, I tried my best to document everything inside the code so you have an easier time, so go grab those `html` and `js` files!
-
-#### Where is the VS screen that the original tool had? 
-
-I changed the coordinates of the characters in the JSON files for the thumbnail feature. Because of this I ruined the VS screen, and I personally didn't care about.
 
 ---
 

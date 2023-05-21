@@ -1,0 +1,21 @@
+{
+    "skinList": [
+        "Default",
+        "Yellow",
+        "Blue",
+        "Red",
+        "Green",
+        "White"
+    ],
+    "saga": "Kirby",
+    "Left": {
+        "x": 30,
+        "y": 610,
+        "scale": 1.4
+    },
+    "Right": {
+        "x": 0,
+        "y": 485,
+        "scale": 1
+    }
+}

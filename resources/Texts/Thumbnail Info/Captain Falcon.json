@@ -1,0 +1,21 @@
+{
+    "skinList": [
+        "Default",
+        "Black",
+        "Red",
+        "White",
+        "Green",
+        "Blue"
+    ],
+    "saga": "F-Zero",
+    "Left": {
+        "x": 100,
+        "y": 430,
+        "scale": 1.2
+    },
+    "Right": {
+        "x": 120,
+        "y": 520,
+        "scale": 1.25
+    }
+}

@@ -16,6 +16,7 @@
   --bg3: #1e1e24;
   --bg4: #444444b6;
   --bg5: #2b2b2b;
+  --bg6: #646464;
   --selected: #2ba4eb;
   --focused: #686868;
 }
@@ -44,6 +45,11 @@ body {
   border-radius: 3px;
   border: 1px solid var(--bg4);
   transition: border-color 100ms;
+}
+
+.textInput:disabled {
+  background: var(--bg6);
+  color: var(--bg1);
 }
 
 input[type="text"] {
@@ -167,7 +173,7 @@ input[type="text"] {
   justify-content: center;
 }
 
-.pCheckbox span {
+.pCheckbox label {
   font-size: 12px;
   text-align: center;
   width: 49px;
@@ -309,8 +315,6 @@ input[type="text"] {
   align-items: center;
   padding-left: 10px;
 }
-
-.charSelector {}
 
 .charSelectorImg {
   width: 52px;
@@ -653,8 +657,6 @@ input[type="text"] {
   transform: scale(1.2);
   transition: opacity 200ms, transform 200ms;
 }
-
-.rosterLine {}
 
 .charInRoster:hover {
   filter: brightness(1.5);

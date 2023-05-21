@@ -1,7 +1,6 @@
 window.onload = init;
+window.onerror = logError;
 
-const fs = require('fs');
-const path = require('path');
 const Jimp = require("jimp");
 
 const OBSWebSocket = require('obs-websocket-js').default;
@@ -12,12 +11,26 @@ obs.on('ConnectionOpened', () => {
 
     obsConnected = true;
 
+    document.getElementById("sceneGameStart").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneGameStartDelay").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneGameEnd").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneGameEndDelay").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneSetEnd").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneSetEndDelay").disabled = !autoSwitchScenes.checked;
+
     document.getElementById("connectOBSStatus").textContent = "Connected";
 });
 
 obs.on('ConnectionClosed', () => {
 
     obsConnected = false;
+
+    document.getElementById("sceneGameStart").disabled = true;
+    document.getElementById("sceneGameStartDelay").disabled = true;
+    document.getElementById("sceneGameEnd").disabled = true;
+    document.getElementById("sceneGameEndDelay").disabled = true;
+    document.getElementById("sceneSetEnd").disabled = true;
+    document.getElementById("sceneSetEndDelay").disabled = true;
 
     document.getElementById("connectOBSStatus").textContent = "Disconnected";
 });
@@ -26,8 +39,8 @@ obs.on('ConnectionError', (err) => {
     obsConnected = false;
     document.getElementById("connectOBSStatus").textContent = "Error: " + err.error;
     console.error('Failed to connect: ' + err);
+    logError(`Failed to connect to OBS: ${err}`);
 });
-
 
 const rootPath = process.env.DEV_ENV ? path.join(__dirname, '..', '..')
     : process.platform == 'win32' ? process.env.PORTABLE_EXECUTABLE_DIR
@@ -43,15 +56,14 @@ const noop = () => { };
 
 const fieldIds = [
     "slippiDirectory",
+    "recordingPath",
     "obsURL",
     "obsPort",
     "startggUrl",
     "p1Tag",
     "p1Name",
-    "p1Score",
     "p2Tag",
     "p2Name",
-    "p2Score",
     "roundName",
     "tournamentName",
     "cName1",
@@ -122,6 +134,20 @@ function restoreFieldValuesFromStorage() {
                 checkbox.onclick(checkbox);
             }
         }
+    }
+
+    handleButtonDisabling();
+}
+
+function handleButtonDisabling() {
+    if (!startggBracket) {
+        document.getElementById("fetchStartGG").disabled = true;
+    }
+
+    if (!obsRecordingPath) {
+        document.getElementById("replayButton").disabled = true;
+        document.getElementById("thumbnailButton").disabled = true;
+        document.getElementById("shortButton").disabled = true;
     }
 }
 
@@ -202,6 +228,7 @@ const p2NameNextInp = document.getElementById('nextP2');
 const roundNextInp = document.getElementById('nextRound');
 const nextAutoInp = document.getElementById('nextAuto');
 
+const autoSwitchScenes = document.getElementById('autoSwitchScenes');
 const sceneGameStartInp = document.getElementById('sceneGameStart');
 const sceneGameStartDelayInp = document.getElementById('sceneGameStartDelay');
 
@@ -226,7 +253,7 @@ let crewsNextRound;
 
 let setStartTime;
 let setOfficiallyStarted;
-let recordingPath = '';
+let obsRecordingPath = '';
 
 let startggOn;
 let startggTimeout;
@@ -348,11 +375,15 @@ function init() {
 }
 
 function setRecordingPath(path) {
-    recordingPath = path;
+    obsRecordingPath = path;
+    document.getElementById("replayButton").disabled = !obsRecordingPath;
+    document.getElementById("thumbnailButton").disabled = !obsRecordingPath;
+    document.getElementById("shortButton").disabled = !obsRecordingPath;
 }
 
 function setStartggBracketUrl(url) {
     startggBracket = url;
+    document.getElementById("fetchStartGG").disabled = !startggBracket;
 }
 
 
@@ -523,7 +554,7 @@ function createCharRoster() {
         document.getElementById("rosterLine1").appendChild(newImg);
     }
     //second row
-    for (let i = 9; i < 18; i++) {
+    for (let i = 9; i < 19; i++) {
         let newImg = document.createElement('img');
         newImg.className = "charInRoster";
 
@@ -534,7 +565,7 @@ function createCharRoster() {
         document.getElementById("rosterLine2").appendChild(newImg);
     }
     //third row
-    for (let i = 18; i < 26; i++) {
+    for (let i = 19; i < 26; i++) {
         let newImg = document.createElement('img');
         newImg.className = "charInRoster";
 
@@ -628,51 +659,14 @@ function addSkinIcons(pNum) {
 
             document.getElementById('skinListP' + pNum).appendChild(newImg);
         }
-        //if the character is Zelda, we also need to add sheik
-        if (charP1 == "Zelda") {
-            if (!document.getElementById('skinListP1Sheik').children.length > 0) {
-                for (let i = 0; i < charInfo.skinList.length; i++) {
-                    let newImg = document.createElement('img');
-                    newImg.className = "skinIcon";
-                    newImg.id = "Sheik " + charInfo.skinList[i];
-                    newImg.title = "Sheik " + charInfo.skinList[i];
 
-                    newImg.setAttribute('src', charPath + '/Stock Icons/Sheik/' + charInfo.skinList[i] + '.png');
-                    newImg.addEventListener("click", changeSkinP1);
+        document.getElementById('skinSelectorP1').style.height = "30px";
+        document.getElementById('skinListP1').style.marginTop = "-1px";
+        document.getElementById('skinListP1Sheik').innerHTML = '';
 
-                    //increase the height of the skins box
-                    document.getElementById('skinSelectorP1').style.height = "60px";
-
-                    document.getElementById('skinListP1Sheik').appendChild(newImg);
-                }
-            }
-            document.getElementById('skinListP1').style.marginTop = "0px";
-        } else {
-            document.getElementById('skinSelectorP1').style.height = "30px";
-            document.getElementById('skinListP1').style.marginTop = "-1px";
-            document.getElementById('skinListP1Sheik').innerHTML = '';
-        }
-        if (charP2 == "Zelda") {
-            if (!document.getElementById('skinListP2Sheik').children.length > 0) {
-                for (let i = 0; i < charInfo.skinList.length; i++) {
-                    let newImg = document.createElement('img');
-                    newImg.className = "skinIcon";
-                    newImg.id = "Sheik " + charInfo.skinList[i];
-                    newImg.title = "Sheik " + charInfo.skinList[i];
-
-                    newImg.setAttribute('src', charPath + '/Stock Icons/Sheik/' + charInfo.skinList[i] + '.png');
-                    newImg.addEventListener("click", changeSkinP2);
-                    document.getElementById('skinSelectorP2').style.height = "60px";
-
-                    document.getElementById('skinListP2Sheik').appendChild(newImg);
-                }
-            }
-            document.getElementById('skinListP2').style.marginTop = "0px";
-        } else {
-            document.getElementById('skinSelectorP2').style.height = "30px";
-            document.getElementById('skinListP2').style.marginTop = "-1px";
-            document.getElementById('skinListP2Sheik').innerHTML = '';
-        }
+        document.getElementById('skinSelectorP2').style.height = "30px";
+        document.getElementById('skinListP2').style.marginTop = "-1px";
+        document.getElementById('skinListP2Sheik').innerHTML = '';
     }
 
     //if the list only has 1 skin or none, hide the skin list
@@ -1130,7 +1124,7 @@ function writeScoreboard() {
 }
 
 function updatePlayers(game) {
-    handleSceneChange(sceneGameStartInp.value.split(','), sceneGameStartDelayInp.value.split(','));
+    handleSceneSwitch(sceneGameStartInp.value.split(','), sceneGameStartDelayInp.value.split(','));
 
     if (currentBestOf.toLowerCase() == "crews" && crewsNextRound != null) {
         roundInp.value = crewsNextRound;
@@ -1267,9 +1261,9 @@ function updateScore(game) {
 
     if (!setOfficiallyStarted) {
         // Set ended
-        handleSceneChange(sceneSetEndInp.value.split(','), sceneSetEndDelayInp.value.split(','));
+        handleSceneSwitch(sceneSetEndInp.value.split(','), sceneSetEndDelayInp.value.split(','));
     } else {
-        handleSceneChange(sceneGameEndInp.value.split(','), sceneGameEndDelayInp.value.split(','));
+        handleSceneSwitch(sceneGameEndInp.value.split(','), sceneGameEndDelayInp.value.split(','));
     }
 
     writeScoreboard();
@@ -1287,7 +1281,7 @@ function newSet(press) {
 
         scoreP1 = p1Score.value;
         scoreP2 = p2Score.value;
-        fetchPlayers();
+        fetchSetDataFromStartGG();
     } else {
         setTimeout(() => {
             p1Score.value = 0;
@@ -1297,7 +1291,7 @@ function newSet(press) {
             scoreP2 = p2Score.value;
 
             if (startggBracket != null) {
-                fetchPlayers();
+                fetchSetDataFromStartGG();
             }
         }, 5 * 1000);
     }
@@ -1329,111 +1323,134 @@ function onSetEnds() {
 }
 
 async function getPGInfo(name1, name2) {
-    setHistory = `? - ?`;
-    if (name1 == "" || name2 == "") {
-        return;
-    }
+    try {
+        setHistory = `? - ?`;
+        if (name1 == "" || name2 == "") {
+            return;
+        }
 
-    let playerProfile;
-    let playerNumber;
-    const dataP1 = await pgFetchSearch(name1);
-    let dataP2;
-    if (dataP1.result.length > 1) {
-        dataP2 = await pgFetchSearch(name2);
-        if (dataP2.result.length > 1) {
-            if (dataP1.result.length < dataP2.result.length) {
-                playerProfile = findSpecificPlayer(name1, dataP1.result);
-                playerNumber = 1;
+        let playerProfile;
+        let playerNumber;
+        const dataP1 = await pgFetchSearch(name1);
+        let dataP2;
+        if (dataP1.result.length > 1) {
+            dataP2 = await pgFetchSearch(name2);
+            if (dataP2.result.length > 1) {
+                if (dataP1.result.length < dataP2.result.length) {
+                    playerProfile = findSpecificPlayer(name1, dataP1.result);
+                    playerNumber = 1;
+                } else {
+                    playerProfile = findSpecificPlayer(name2, dataP2.result);
+                    playerNumber = 2;
+                }
             } else {
-                playerProfile = findSpecificPlayer(name2, dataP2.result);
+                playerProfile = dataP2.result[0];
                 playerNumber = 2;
             }
+        } else if (dataP1.result.length == 1) {
+            playerProfile = dataP1.result[0];
+            playerNumber = 1;
         } else {
-            playerProfile = dataP2.result[0];
-            playerNumber = 2;
-        }
-    } else {
-        playerProfile = dataP1.result[0];
-        playerNumber = 1;
-    }
-
-    if (playerProfile == null) {
-        setHistory = `? - ? `;
-        return;
-    }
-
-    const opponents = await pgFetchOpponents(playerProfile.id);
-    const opponentTag = playerNumber == 1 ? name2 : name1;
-    let opponentId;
-
-    for (const [key, value] of Object.entries(opponents.result)) {
-        if (value.tag.toLowerCase() == opponentTag.toLowerCase()) {
-            opponentId = key;
-            break;
-        }
-    }
-
-    let opponentProfile;
-
-    if (opponentId != null) {
-        opponentProfile = (await pgFetchPlayerProfile(opponentId)).result;
-    } else {
-        let dataOpponent = playerNumber == 1 ? dataP2 : dataP1;
-
-        if (dataOpponent == null) {
-            dataOpponent = await pgFetchSearch(playerNumber == 1 ? name2 : name1);
+            dataP2 = await pgFetchSearch(name2);
+            if (dataP2.result.length > 1) {
+                playerProfile = findSpecificPlayer(name2, dataP2.result);
+                playerNumber = 2;
+            } else if (dataP2.result.length == 1) {
+                playerProfile = dataP2.result[0];
+                playerNumber = 2;
+            }
         }
 
-        if (dataOpponent.result.length > 1) {
-            opponentProfile = findSpecificPlayer(playerNumber == 1 ? name2 : name1, dataOpponent.result);
+        if (playerProfile == null) {
+            setHistory = `? - ? `;
+
+            fs.copyFileSync(`${playerPath}/unknown.png`, `${playerPath}/player1.png`);
+            fs.utimesSync(`${playerPath}/player1.png`, new Date(), new Date());
+
+            fs.copyFileSync(`${playerPath}/unknown.png`, `${playerPath}/player2.png`);
+            fs.utimesSync(`${playerPath}/player2.png`, new Date(), new Date());
+
+            return;
+        }
+
+        const opponents = await pgFetchOpponents(playerProfile.id);
+        const opponentTag = playerNumber == 1 ? name2 : name1;
+        let opponentId;
+
+        for (const [key, value] of Object.entries(opponents.result)) {
+            if (value.tag.toLowerCase() == opponentTag.toLowerCase()) {
+                opponentId = key;
+                break;
+            }
+        }
+
+        let opponentProfile;
+
+        if (opponentId != null) {
+            opponentProfile = (await pgFetchPlayerProfile(opponentId)).result;
         } else {
-            opponentProfile = dataOpponent.result[0];
-        }
-    }
+            let dataOpponent = playerNumber == 1 ? dataP2 : dataP1;
 
-    const p1Profile = playerNumber == 1 ? playerProfile : opponentProfile;
-    const p2Profile = playerNumber == 2 ? playerProfile : opponentProfile;
-
-    const p1Avatar = p1Profile?.images?.profile?.url;
-    const p2Avatar = p2Profile?.images?.profile?.url;
-
-    if (p1Avatar != null) {
-        updateAvatar(p1Avatar, 1);
-    } else {
-        fs.copyFileSync(`${playerPath}/unknown.png`, `${playerPath}/player1.png`);
-    }
-
-    if (p2Avatar != null) {
-        updateAvatar(p2Avatar, 2);
-    } else {
-        fs.copyFileSync(`${playerPath}/unknown.png`, `${playerPath}/player2.png`);
-    }
-
-    const playerData = await pgFetchPlayerData(playerProfile.id);
-
-    let matches = 0;
-    let wins = 0;
-
-    for (const value of Object.values(playerData.result)) {
-        for (const set of value.sets) {
-            if (set.p1_score == -1 || set.p2_score == -1) {
-                continue;
+            if (dataOpponent == null) {
+                dataOpponent = await pgFetchSearch(playerNumber == 1 ? name2 : name1);
             }
 
-            if (set.p1_id == opponentId || set.p2_id == opponentId) {
-                matches++;
-                if (set.winner_id == playerProfile.id) {
-                    wins++;
+            if (dataOpponent.result.length > 1) {
+                opponentProfile = findSpecificPlayer(playerNumber == 1 ? name2 : name1, dataOpponent.result);
+            } else {
+                opponentProfile = dataOpponent.result[0];
+            }
+        }
+
+        const p1Profile = playerNumber == 1 ? playerProfile : opponentProfile;
+        const p2Profile = playerNumber == 2 ? playerProfile : opponentProfile;
+
+        const p1Avatar = p1Profile?.images?.profile?.url;
+        const p2Avatar = p2Profile?.images?.profile?.url;
+
+        if (p1Avatar != null) {
+            updateAvatar(p1Avatar, 1);
+        } else {
+            fs.copyFileSync(`${playerPath}/unknown.png`, `${playerPath}/player1.png`);
+            fs.utimesSync(`${playerPath}/player1.png`, new Date(), new Date());
+        }
+
+        if (p2Avatar != null) {
+            updateAvatar(p2Avatar, 2);
+        } else {
+            fs.copyFileSync(`${playerPath}/unknown.png`, `${playerPath}/player2.png`);
+            fs.utimesSync(`${playerPath}/player2.png`, new Date(), new Date());
+        }
+
+        const playerData = await pgFetchPlayerData(playerProfile.id);
+
+        let matches = 0;
+        let wins = 0;
+
+        for (const value of Object.values(playerData.result)) {
+            for (const set of value.sets) {
+                if (set.p1_score == -1 || set.p2_score == -1) {
+                    continue;
+                }
+
+                if (set.p1_id == opponentId || set.p2_id == opponentId) {
+                    matches++;
+                    if (set.winner_id == playerProfile.id) {
+                        wins++;
+                    }
                 }
             }
         }
+
+        const winsP1 = playerNumber == 1 ? wins : matches - wins;
+        const winsP2 = playerNumber == 2 ? wins : matches - wins;
+
+        setHistory = `${winsP1} - ${winsP2}`;
+        fs.writeFileSync(textPath + "/Simple Texts/Set History.txt", setHistory);
+    } catch (error) {
+        console.log(error);
+        logError(`Error while fetching PGStats data: ${error.message}`);
     }
-
-    const winsP1 = playerNumber == 1 ? wins : matches - wins;
-    const winsP2 = playerNumber == 2 ? wins : matches - wins;
-
-    setHistory = `${winsP1} - ${winsP2}`;
-    fs.writeFileSync(textPath + "/Simple Texts/Set History.txt", setHistory);
 }
 
 async function pgFetchSearch(name) {
@@ -1528,6 +1545,8 @@ async function updateAvatar(url, player) {
             image.write(`${playerPath}/player${player}.png`);
         });
     } catch (err) {
+        console.error(err);
+        logError(`Error updating avatar for player ${player}: ${err}`);
         // ignore;
     }
 }
@@ -1560,7 +1579,7 @@ async function getDuration(path) {
 }
 
 async function cutVideo() {
-    if (recordingPath == null || recordingPath == "") {
+    if (obsRecordingPath == null || obsRecordingPath == "") {
         return;
     }
 
@@ -1571,7 +1590,7 @@ async function cutVideo() {
         const setDuration = (now - cachedVideoData.startTime.getTime()) / 1000;
 
         // Get the video duration
-        const videoDuration = await getDuration(recordingPath);
+        const videoDuration = await getDuration(obsRecordingPath);
 
         // Calculate the start time of the cut
         const startTime = videoDuration - setDuration;
@@ -1585,7 +1604,7 @@ async function cutVideo() {
             pathString = `${cachedVideoData.p1Name} (${cachedVideoData.charsP1.join(', ')}) vs ${cachedVideoData.p2Name} (${cachedVideoData.charsP2.join(', ')}) - ${cachedVideoData.round} - ${cachedVideoData.tournamentName}.mkv`;
         }
 
-        const outputDirectory = path.join(path.dirname(recordingPath), 'Videos');
+        const outputDirectory = path.join(path.dirname(obsRecordingPath), 'Videos');
 
         if (!fs.existsSync(outputDirectory)) {
             // Create the directory recursively
@@ -1594,7 +1613,7 @@ async function cutVideo() {
 
         const outputFilePath = path.join(outputDirectory, pathString);
 
-        ffmpeg(recordingPath)
+        ffmpeg(obsRecordingPath)
             .outputOptions('-preset veryfast')
             .setStartTime(startTime - 15)
             .duration(setDuration + 30)
@@ -1609,12 +1628,13 @@ async function cutVideo() {
 
         createThumbnail();
     } catch (error) {
-        console.error(`Error getting video duration: ${error.message}`);
+        console.error(`Error cutting video : ${error.message}`);
+        logError(`Error cutting video : ${error.message}`);
     }
 }
 
 async function createThumbnail() {
-    if (recordingPath == null || recordingPath == "") {
+    if (obsRecordingPath == null || obsRecordingPath == "") {
         return;
     }
 
@@ -1643,8 +1663,8 @@ async function createThumbnail() {
         canvas.height = 1080;
         const ctx = canvas.getContext('2d');
 
-        char1Info = getTextJson("Character Info/" + cachedVideoData.charP1);
-        char2Info = getTextJson("Character Info/" + cachedVideoData.charP2);
+        char1Info = getTextJson("Thumbnail Info/" + cachedVideoData.charP1);
+        char2Info = getTextJson("Thumbnail Info/" + cachedVideoData.charP2);
 
         const imgBackground = await loadImage(`${recordingsPath}/Thumbnails/background.png`);
         const imgVSMelee = await loadImage(`${recordingsPath}/Thumbnails/VS Melee.png`);
@@ -1661,7 +1681,7 @@ async function createThumbnail() {
 
         const fontName = fontData.font.split('.')[0];
 
-        const fontFace = new FontFace(fontName, `url('../../Stream tool/Resources/Fonts/${fontData.font}')`);
+        const fontFace = new FontFace(fontName, `url('${process.env.DEV_ENV ? '../..' : rootPath.replace(/\\/g, '/')}/resources/Fonts/${fontData.font}')`);
 
         const font = await fontFace.load();
         document.fonts.add(font);
@@ -1695,7 +1715,7 @@ async function createThumbnail() {
             pathString = `${cachedVideoData.p1Name} (${cachedVideoData.charsP1.join(', ')}) vs ${cachedVideoData.p2Name} (${cachedVideoData.charsP2.join(', ')}) - ${cachedVideoData.round} - ${cachedVideoData.tournamentName}.png`;
         }
 
-        const outputDirectory = path.join(path.dirname(recordingPath), 'Videos');
+        const outputDirectory = path.join(path.dirname(obsRecordingPath), 'Videos');
 
         if (!fs.existsSync(outputDirectory)) {
             // Create the directory recursively
@@ -1708,6 +1728,7 @@ async function createThumbnail() {
         fs.writeFileSync(outputFilePath, base64Data, 'base64');
     } catch (error) {
         console.error(`Error creating thumbnail: ${error.message}`);
+        logError(`Error creating thumbnail: ${error.message}`);
     }
 }
 
@@ -1722,7 +1743,7 @@ async function loadImage(src) {
 
 async function createReplay() {
     try {
-        if (recordingPath == null || recordingPath == '') {
+        if (obsRecordingPath == null || obsRecordingPath == '') {
             console.log("No recording path set");
             return;
         }
@@ -1731,12 +1752,12 @@ async function createReplay() {
         const duration = document.getElementById('replayDuration').value || 10;
 
         // Get the video duration
-        const videoDuration = await getDuration(recordingPath);
+        const videoDuration = await getDuration(obsRecordingPath);
 
         // Calculate the start time of the cut
         const startTime = videoDuration - duration;
 
-        const outputDirectory = path.join(path.dirname(recordingPath), 'Replays');
+        const outputDirectory = path.join(path.dirname(obsRecordingPath), 'Replays');
 
         if (!fs.existsSync(outputDirectory)) {
             // Create the directory recursively
@@ -1746,7 +1767,7 @@ async function createReplay() {
         const outputFilePath = path.join(outputDirectory, `Replay ${new Date().toISOString().slice(0, 19).replace(/:/g, "-").replace('T', ' ')}.mkv`);
 
         // Cut the video
-        ffmpeg(recordingPath)
+        ffmpeg(obsRecordingPath)
             .outputOptions('-preset veryfast')
             .setStartTime(startTime)
             .duration(duration)
@@ -1762,80 +1783,105 @@ async function createReplay() {
             })
             .run();
     } catch (error) {
+        logError(`Error creating replay: ${error.message}`);
         console.error(`Error getting video duration: ${error.message}`);
     }
 }
 
-async function fetchPlayers() {
-    if (!startggOn) {
-        return;
-    }
-
-    if (startggBracket == null || startggBracket == '') {
-        return;
-    }
-
-    const data = await fetch(startggBracket, { cache: 'no-cache' });
-    const htmlString = await data.text();
-
-    const parser = new DOMParser();
-    const htmlDoc = parser.parseFromString(htmlString, 'text/html');
-
-    const element = htmlDoc.querySelector('.match.in-progress .fa-twitch');
-    if (element == null) {
-        if (startggTimeout != null) {
-            clearTimeout(startggTimeout);
+async function fetchSetDataFromStartGG(fromButton) {
+    try {
+        if (!startggOn && !fromButton) {
+            return;
         }
 
-        startggTimeout = setTimeout(() => {
-            fetchPlayers();
-        }, 10000);
-        return;
-    }
-
-    const parent = element.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
-
-    const player1Container = parent.querySelector('.match-section-top .match-player-name-container');
-    const player2Container = parent.querySelector('.match-section-bottom .match-player-name-container');
-
-    const tag1 = player1Container.querySelector('.prefix')?.textContent || '';
-    const tag2 = player2Container.querySelector('.prefix')?.textContent || '';
-
-    const player1 = player1Container.textContent.replace(tag1, '').trim();
-    const player2 = player2Container.textContent.replace(tag2, '').trim();
-
-    if ((player1 == null || player2 == null) || (player1 == previousStartggP1 && player2 == previousStartggP2)) {
-        if (startggTimeout != null) {
-            clearTimeout(startggTimeout);
+        if (!startggBracket) {
+            return;
         }
 
-        startggTimeout = setTimeout(() => {
-            fetchPlayers();
-        }, 10000);
+        const data = await fetch(startggBracket, { cache: 'no-cache' });
+        const htmlString = await data.text();
 
-        return;
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(htmlString, 'text/html');
+
+        const element = htmlDoc.querySelector('.match.in-progress .fa-twitch');
+        if (element == null) {
+            if (startggTimeout != null) {
+                clearTimeout(startggTimeout);
+            }
+
+            if (startggOn) {
+                startggTimeout = setTimeout(() => {
+                    fetchSetDataFromStartGG();
+                }, 10000);
+            }
+            return;
+        }
+
+        const parent = element.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+
+        const player1Container = parent.querySelector('.match-section-top .match-player-name-container');
+
+        let player1, tag1
+
+        if (player1Container != null) {
+            player1 = player1Container.textContent.replace(tag1, '').trim();
+            tag1 = player1Container.querySelector('.prefix')?.textContent.trim() || '';
+        } else {
+            player1 = parent.querySelector('.match-section-top .match-player-name').textContent.trim();
+            tag1 = '';
+        }
+
+        const player2Container = parent.querySelector('.match-section-bottom .match-player-name-container');
+
+        let player2, tag2
+
+        if (player2Container != null) {
+            player2 = player2Container.textContent.replace(tag2, '').trim();
+            tag2 = player2Container.querySelector('.prefix')?.textContent.trim() || '';
+        } else {
+            player2 = parent.querySelector('.match-section-bottom .match-player-name').textContent.trim();
+            tag2 = '';
+        }
+
+        if ((player1 == null || player2 == null) || (player1 == previousStartggP1 && player2 == previousStartggP2 && !fromButton)) {
+            if (startggTimeout != null) {
+                clearTimeout(startggTimeout);
+            }
+
+            if (startggOn) {
+                startggTimeout = setTimeout(() => {
+                    fetchSetDataFromStartGG();
+                }, 10000);
+            }
+
+            return;
+        }
+
+        p1NameInp.value = player1;
+        p2NameInp.value = player2;
+
+        p1TagInp.value = tag1;
+        p2TagInp.value = tag2;
+
+        previousStartggP1 = player1;
+        previousStartggP2 = player2;
+
+        // Determine the round
+        const left = parent.style.left.replace('px', '')
+        const roundIndex = Math.floor(left / 204);
+        const roundElements = parent.parentNode.previousElementSibling.children;
+        const roundElement = roundElements[roundIndex];
+
+        const roundName = roundElement.querySelector('[class^="title-"]').textContent.trim();
+
+        roundInp.value = roundName;
+
+        writeScoreboard();
+    } catch (error) {
+        console.error(`Error fetching data from start.gg: ${error.message}`);
+        logError(`Error fetching data from start.gg: ${error.message}`);
     }
-
-    p1NameInp.value = player1;
-    p2NameInp.value = player2;
-
-    p1TagInp.value = tag1;
-    p2TagInp.value = tag2;
-
-    previousStartggP1 = player1;
-    previousStartggP2 = player2;
-
-    // Determine the round
-    const left = parent.style.left.replace('px', '')
-    const roundIndex = Math.floor(left / 204);
-    const roundElements = parent.parentNode.previousElementSibling.children;
-    const roundElement = roundElements[roundIndex];
-
-    const roundName = roundElement.querySelector('[id^="title-"]').textContent.trim();
-
-    roundInp.value = roundName;
-
-    writeScoreboard();
 }
 
 async function toggleStartgg(v) {
@@ -1845,7 +1891,7 @@ async function toggleStartgg(v) {
             clearTimeout(startggTimeout);
         }
     } else {
-        fetchPlayers();
+        fetchSetDataFromStartGG();
     }
 }
 
@@ -1875,51 +1921,69 @@ async function swapPortPrio(v) {
     writeScoreboard();
 }
 
-async function handleSceneChange(scenes, delays) {
+async function handleSceneSwitch(scenes, delays) {
+    try {
+        if (!obsConnected) {
+            return;
+        }
+
+        if (!autoSwitchScenes.checked) {
+            return;
+        }
+
+        if (sceneSwitchTimeout) {
+            clearTimeout(sceneSwitchTimeout);
+            sceneSwitchTimeout = null;
+        }
+
+        if (scenes.length == 0 || scenes[0] == '') {
+            return;
+        }
+
+        const scene = scenes[0].trim();
+        const delay = delays[0];
+
+        if (delay == null || delay == '') {
+            obs.call('SetCurrentProgramScene', { 'sceneName': scene })
+            handleSceneSwitch(scenes.slice(1), delays.slice(1));
+        } else {
+            const delayFloat = parseFloat(delay);
+
+            if (isNaN(delayFloat)) {
+                obs.call('SetCurrentProgramScene', { 'sceneName': scene })
+                handleSceneSwitch(scenes.slice(1), delays.slice(1));
+                return;
+            }
+
+            sceneSwitchTimeout = setTimeout(() => {
+                obs.call('SetCurrentProgramScene', { 'sceneName': scene })
+                handleSceneSwitch(scenes.slice(1), delays.slice(1));
+            }, delayFloat * 1000);
+        }
+    } catch (error) {
+        console.error(`Error switching scenes: ${error.message}`);
+        logError(`Error switching scenes: ${error.message}`);
+    }
+}
+
+async function onAutoSceneSwitchCheck() {
     if (!obsConnected) {
         return;
     }
 
-    if (sceneSwitchTimeout) {
-        clearTimeout(sceneSwitchTimeout);
-        sceneSwitchTimeout = null;
-    }
-
-    if (scenes.length == 0 || scenes[0] == '') {
-        return;
-    }
-
-    const scene = scenes[0].trim();
-    const delay = delays[0];
-
-    if (delay == null || delay == '') {
-        obs.call('SetCurrentProgramScene', { 'sceneName': scene })
-        handleSceneChange(scenes.slice(1), delays.slice(1));
-    } else {
-        const delayFloat = parseFloat(delay);
-
-        if (isNaN(delayFloat)) {
-            obs.call('SetCurrentProgramScene', { 'sceneName': scene })
-            handleSceneChange(scenes.slice(1), delays.slice(1));
-            return;
-        }
-
-        sceneSwitchTimeout = setTimeout(() => {
-            obs.call('SetCurrentProgramScene', { 'sceneName': scene })
-            handleSceneChange(scenes.slice(1), delays.slice(1));
-        }, delayFloat * 1000);
-    }
+    document.getElementById("sceneGameStart").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneGameStartDelay").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneGameEnd").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneGameEndDelay").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneSetEnd").disabled = !autoSwitchScenes.checked;
+    document.getElementById("sceneSetEndDelay").disabled = !autoSwitchScenes.checked;
 }
 
 async function connectToOBS() {
-    try {
-        if (obsPasswordInp.value == null || obsPasswordInp.value == '') {
-            obs.connect(`ws://${obsURLInp.value || '127.0.0.01'}:${obsPortInp.value || '4455'}`);
-        } else {
-            obs.connect(`ws://${obsURLInp.value || '127.0.0.01'}:${obsPortInp.value || '4455'}`, obsPasswordInp.value);
-        }
-    } catch (err) {
-        console.error(err);
+    if (obsPasswordInp.value == null || obsPasswordInp.value == '') {
+        obs.connect(`ws://${obsURLInp.value || '127.0.0.01'}:${obsPortInp.value || '4455'}`);
+    } else {
+        obs.connect(`ws://${obsURLInp.value || '127.0.0.01'}:${obsPortInp.value || '4455'}`, obsPasswordInp.value);
     }
 }
 
@@ -1937,145 +2001,165 @@ function getVideoDuration(filePath) {
 }
 
 async function createShort(input, auto) {
-    const data = await getJson("Recordings/Shorts/coordinates");
+    try {
+        const data = await getJson("Recordings/Shorts/coordinates");
 
-    const duration = await getVideoDuration(input);
+        const duration = await getVideoDuration(input);
 
-    if (duration == "N/A") {
-        return;
+        if (duration == "N/A") {
+            return;
+        }
+
+        const filename = path.parse(input).name.replace('Replay', '');
+
+        let directory
+
+        if (auto) {
+            directory = path.join(path.dirname(input), '..', 'Shorts')
+        } else {
+            directory = path.join(path.dirname(input))
+        }
+
+        if (!fs.existsSync(directory)) {
+            // Create the directory recursively
+            fs.mkdirSync(directory, { recursive: true });
+        }
+
+        // Output file paths
+        const centerOutput = path.join(directory, `${filename}_center.mkv`);
+        const leftOutput = path.join(directory, `${filename}_left.mkv`);
+        const leftScaledOutput = path.join(directory, `${filename}_left_scaled.mkv`);
+        const rightOutput = path.join(directory, `${filename}_right.mkv`);
+        const rightScaledOutput = path.join(directory, `${filename}_right_scaled.mkv`);
+        const finalOutput = path.join(directory, `Short ${filename}.mkv`);
+
+        data.center.x = data.center.left;
+        data.center.y = data.center.top;
+        data.center.w = data.center.right - data.center.left;
+        data.center.w = data.center.bottom - data.center.top;
+
+        data.left.x = data.left.left;
+        data.left.y = data.left.top;
+        data.left.w = data.left.right - data.left.left;
+        data.left.h = data.left.bottom - data.left.top;
+
+        data.right.x = data.right.left;
+        data.right.y = data.right.top;
+        data.right.w = data.right.right - data.right.left;
+        data.right.h = data.right.bottom - data.right.top;
+
+        // Step 1: Crop center portion
+        ffmpeg(input)
+            .output(centerOutput)
+            .videoFilter(`crop = ${data.center.w}: ${data.center.h}: ${data.center.x}: ${data.center.y}`)
+            .on('end', () => {
+                // Step 2: Crop left portion
+                ffmpeg(input)
+                    .output(leftOutput)
+                    .videoFilter(`crop = ${data.left.w}: ${data.left.h}: ${data.left.x}: ${data.left.y}`)
+                    .on('end', () => {
+                        // Step 3: Crop right portion
+                        ffmpeg(input)
+                            .output(rightOutput)
+                            .videoFilter(`crop = ${data.right.w}: ${data.right.h}: ${data.right.x}: ${data.right.y}`)
+                            .on('end', () => {
+
+                                let height = Math.floor(data.center.w * 16 / 9);
+                                if (height % 2 == 1) {
+                                    height += 1;
+                                }
+
+                                const scaleFactor = height - data.center.h;
+
+                                let leftScaledWidth, leftScaledHeight, rightScaledWidth, rightScaledHeight;
+
+                                if (data.scaleVertical) {
+                                    leftScaledWidth = Math.floor(data.left.w * scaleFactor / data.left.h);
+                                    leftScaledHeight = scaleFactor;
+                                } else {
+                                    leftScaledWidth = data.center.w / 2
+                                    leftScaledHeight = (leftScaledWidth * data.left.h) / data.left.w;
+                                }
+
+                                if (leftScaledWidth % 2 == 1) {
+                                    leftScaledWidth += 1;
+                                }
+
+                                if (leftScaledHeight % 2 == 1) {
+                                    leftScaledHeight += 1;
+                                }
+
+                                ffmpeg(leftOutput)
+                                    .output(leftScaledOutput)
+                                    .videoFilter(`scale = ${leftScaledWidth}: ${leftScaledHeight}`)
+                                    .on('error', function (err, stdout, stderr) {
+                                        if (err) {
+                                            console.log(err.message);
+                                            console.log("stdout:\n" + stdout);
+                                            console.log("stderr:\n" + stderr);
+                                            reject("Error");
+                                        }
+                                    })
+                                    .on('end', () => {
+
+                                        if (data.scaleVertical) {
+                                            rightScaledWidth = Math.floor(data.right.w * scaleFactor / data.right.h);
+                                            rightScaledHeight = scaleFactor;
+                                        } else {
+                                            rightScaledWidth = data.center.w / 2
+                                            rightScaledHeight = (rightScaledWidth * data.right.h) / data.left.w;
+                                        }
+
+                                        if (rightScaledWidth % 2 == 1) {
+                                            rightScaledWidth += 1;
+                                        }
+
+                                        if (rightScaledHeight % 2 == 1) {
+                                            rightScaledHeight += 1;
+                                        }
+
+                                        ffmpeg(rightOutput)
+                                            .output(rightScaledOutput)
+                                            .videoFilter(`scale = ${rightScaledWidth}: ${rightScaledHeight}`)
+                                            .on('end', () => {
+
+                                                // Step 4: Stack all three videos
+                                                ffmpeg()
+                                                    .input(centerOutput)
+                                                    .input(leftScaledOutput)
+                                                    .input(rightScaledOutput)
+                                                    .complexFilter(
+                                                        [
+                                                            `[0: v]pad = iw: ${height}[int]`,
+                                                            `[int][1: v]overlay = 0: ${data.center.h}[left]`,
+                                                            `[left][2: v]overlay = W - ${rightScaledWidth}: ${data.center.h}[stacked]`,
+                                                        ],
+                                                        'stacked'
+                                                    )
+                                                    .output(finalOutput)
+                                                    .outputOptions([
+                                                        '-map', '0:a',              // Map the audio stream from the first input
+                                                        '-c:a', 'copy'              // Copy the audio codec
+                                                    ])
+                                                    .on('end', () => {
+                                                        console.log('Process completed successfully.');
+
+                                                        fs.unlink(centerOutput, noop);
+                                                        fs.unlink(leftOutput, noop);
+                                                        fs.unlink(leftScaledOutput, noop);
+                                                        fs.unlink(rightOutput, noop);
+                                                        fs.unlink(rightScaledOutput, noop);
+                                                    })
+                                                    .run();
+                                            }).run();
+                                    }).run();
+                            }).run();
+                    }).run();
+            }).run()
+    } catch (error) {
+        console.log(error);
+        logError(`Error creating short: ${error.message}`);
     }
-
-    const filename = path.parse(input).name.replace('Replay', '');
-
-    let directory
-
-    if (auto) {
-        directory = path.join(path.dirname(input), '..', 'Shorts')
-    } else {
-        directory = path.join(path.dirname(input))
-    }
-
-    if (!fs.existsSync(directory)) {
-        // Create the directory recursively
-        fs.mkdirSync(directory, { recursive: true });
-    }
-
-    // Output file paths
-    const centerOutput = path.join(directory, `${filename}_center.mkv`);
-    const leftOutput = path.join(directory, `${filename}_left.mkv`);
-    const leftScaledOutput = path.join(directory, `${filename}_left_scaled.mkv`);
-    const rightOutput = path.join(directory, `${filename}_right.mkv`);
-    const rightScaledOutput = path.join(directory, `${filename}_right_scaled.mkv`);
-    const finalOutput = path.join(directory, `Short ${filename}.mkv`);
-
-    // Step 1: Crop center portion
-    ffmpeg(input)
-        .output(centerOutput)
-        .videoFilter(`crop=${data.center.w}:${data.center.h}:${data.center.x}:${data.center.y}`)
-        .on('end', () => {
-            // Step 2: Crop left portion
-            ffmpeg(input)
-                .output(leftOutput)
-                .videoFilter(`crop=${data.left.w}:${data.left.h}:${data.left.x}:${data.left.y}`)
-                .on('end', () => {
-                    // Step 3: Crop right portion
-                    ffmpeg(input)
-                        .output(rightOutput)
-                        .videoFilter(`crop=${data.right.w}:${data.right.h}:${data.right.x}:${data.right.y}`)
-                        .on('end', () => {
-
-                            let height = Math.floor(data.center.w * 16 / 9);
-                            if (height % 2 == 1) {
-                                height += 1;
-                            }
-
-                            const scaleFactor = height - data.center.h;
-
-                            let leftScaledWidth, leftScaledHeight, rightScaledWidth, rightScaledHeight;
-
-                            if (data.scaleVertical) {
-                                leftScaledWidth = Math.floor(data.left.w * scaleFactor / data.left.h);
-                                leftScaledHeight = scaleFactor;
-                            } else {
-                                leftScaledWidth = data.center.w / 2
-                                leftScaledHeight = (leftScaledWidth * data.left.h) / data.left.w;
-                            }
-
-                            if (leftScaledWidth % 2 == 1) {
-                                leftScaledWidth += 1;
-                            }
-
-                            if (leftScaledHeight % 2 == 1) {
-                                leftScaledHeight += 1;
-                            }
-
-                            ffmpeg(leftOutput)
-                                .output(leftScaledOutput)
-                                .videoFilter(`scale=${leftScaledWidth}:${leftScaledHeight}`)
-                                .on('error', function (err, stdout, stderr) {
-                                    if (err) {
-                                        console.log(err.message);
-                                        console.log("stdout:\n" + stdout);
-                                        console.log("stderr:\n" + stderr);
-                                        reject("Error");
-                                    }
-                                })
-                                .on('end', () => {
-
-                                    if (data.scaleVertical) {
-                                        rightScaledWidth = Math.floor(data.right.w * scaleFactor / data.right.h);
-                                        rightScaledHeight = scaleFactor;
-                                    } else {
-                                        rightScaledWidth = data.center.w / 2
-                                        rightScaledHeight = (rightScaledWidth * data.right.h) / data.left.w;
-                                    }
-
-                                    if (rightScaledWidth % 2 == 1) {
-                                        rightScaledWidth += 1;
-                                    }
-
-                                    if (rightScaledHeight % 2 == 1) {
-                                        rightScaledHeight += 1;
-                                    }
-
-                                    ffmpeg(rightOutput)
-                                        .output(rightScaledOutput)
-                                        .videoFilter(`scale=${rightScaledWidth}:${rightScaledHeight}`)
-                                        .on('end', () => {
-
-                                            // Step 4: Stack all three videos
-                                            ffmpeg()
-                                                .input(centerOutput)
-                                                .input(leftScaledOutput)
-                                                .input(rightScaledOutput)
-                                                .complexFilter(
-                                                    [
-                                                        `[0:v]pad=iw:${height}[int]`,
-                                                        `[int][1:v]overlay=0:${data.center.h}[left]`,
-                                                        `[left][2:v]overlay=W-${rightScaledWidth}:${data.center.h}[stacked]`,
-                                                    ],
-                                                    'stacked'
-                                                )
-                                                .output(finalOutput)
-                                                .outputOptions([
-                                                    '-map', '0:a',              // Map the audio stream from the first input
-                                                    '-c:a', 'copy'              // Copy the audio codec
-                                                ])
-                                                .on('end', () => {
-                                                    console.log('Process completed successfully.');
-
-                                                    fs.unlink(centerOutput, noop);
-                                                    fs.unlink(leftOutput, noop);
-                                                    fs.unlink(leftScaledOutput, noop);
-                                                    fs.unlink(rightOutput, noop);
-                                                    fs.unlink(rightScaledOutput, noop);
-                                                })
-                                                .run();
-                                        }).run();
-                                }).run();
-                        }).run();
-                }).run();
-        }).run()
 }
 
 restoreFieldValuesFromStorage();

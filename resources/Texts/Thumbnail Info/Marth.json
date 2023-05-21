@@ -1,0 +1,20 @@
+{
+    "skinList": [
+        "Default",
+        "Red",
+        "Green",
+        "Black",
+        "White"
+    ],
+    "saga": "Fire Emblem",
+    "Left": {
+        "x": 50,
+        "y": 480,
+        "scale": 1.4
+    },
+    "Right": {
+        "x": 0,
+        "y": 500,
+        "scale": 1.0
+    }
+}

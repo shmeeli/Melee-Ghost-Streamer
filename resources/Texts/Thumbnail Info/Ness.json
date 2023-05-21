@@ -1,0 +1,19 @@
+{
+    "skinList": [
+        "Default",
+        "Yellow",
+        "Blue",
+        "Green"
+    ],
+    "saga": "Mother",
+    "Left": {
+        "x": 0,
+        "y": 565,
+        "scale": 1.4
+    },
+    "Right": {
+        "x": -30,
+        "y": 500,
+        "scale": 1
+    }
+}

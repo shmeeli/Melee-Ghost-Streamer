@@ -313,7 +313,7 @@ function getData(scInfo) {
 
 //did an image fail to load? this will be used to show nothing
 function showNothing(itemEL) {
-	itemEL.setAttribute('src', 'Resources/Literally Nothing.png');
+	itemEL.setAttribute('src', '../resources/Literally Nothing.png');
 }
 
 //color change
@@ -527,7 +527,7 @@ function getInfo() {
 	return new Promise(function (resolve) {
 		const oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", reqListener);
-		oReq.open("GET", 'Resources/Texts/ScoreboardInfo.json');
+		oReq.open("GET", '../resources/Texts/ScoreboardInfo.json');
 		oReq.send();
 
 		//will trigger when file loads
@@ -544,7 +544,7 @@ function getCharInfo(pCharacter) {
 		const oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", reqListener);
 		oReq.onerror = () => { resolve("notFound") }; //for obs local file browser sources
-		oReq.open("GET", 'Resources/Texts/Character Info/' + pCharacter + '.json');
+		oReq.open("GET", '../resources/Texts/Character Info/' + pCharacter + '.json');
 		oReq.send();
 
 		function reqListener() {
@@ -565,15 +565,15 @@ async function updateChar(pCharacter, pSkin, color, charID, direction) {
 		//if the image fails to load, we will put a placeholder
 		charEL.addEventListener("error", () => {
 			if (direction == "Left") {
-				charEL.setAttribute('src', 'Resources/Characters/Portraits/Random ' + color + '.png');
+				charEL.setAttribute('src', '../resources/Characters/Portraits/Random ' + color + '.png');
 			} else {
-				charEL.setAttribute('src', 'Resources/Characters/Portraits/Random ' + color + '.png');
+				charEL.setAttribute('src', '../resources/Characters/Portraits/Random ' + color + '.png');
 			}
 		})
 	}
 
 	//change the image path depending on the character, skin and direction
-	charEL.setAttribute('src', 'Resources/Characters/VS Screen/' + pCharacter + '/' + pSkin + ' ' + direction + '.png');
+	charEL.setAttribute('src', '../resources/Characters/VS Screen/' + pCharacter + '/' + pSkin + ' ' + direction + '.png');
 
 	//get the character positions
 	const charInfo = await getCharInfo(pCharacter);

@@ -36,7 +36,7 @@ function init() {
 	}
 
 	mainLoop();
-	setInterval( () => { mainLoop(); }, 500); //update interval
+	setInterval(() => { mainLoop(); }, 500); //update interval
 }
 
 async function getData(scInfo) {
@@ -47,7 +47,7 @@ async function getData(scInfo) {
 	let p1Character = scInfo['p1Character'];
 	let p1Skin = scInfo['p1Skin'];
 	let p1WL = scInfo['p1WL'];
-	
+
 	let p2Name = scInfo['p2Name'];
 	let p2Team = scInfo['p2Team'];
 	let p2Score = scInfo['p2Score'];
@@ -80,8 +80,8 @@ async function getData(scInfo) {
 			document.getElementById('overlayIntro').style.opacity = 1;
 
 			//this vid is just the bars moving (todo: maybe do it through javascript?)
-			setTimeout(() => { 
-				document.getElementById('introVid').setAttribute('src', 'Resources/Webms/Intro.webm');
+			setTimeout(() => {
+				document.getElementById('introVid').setAttribute('src', '../resources/Webms/Intro.webm');
 				document.getElementById('introVid').play();
 			}, 0); //if you need it to start later, change that 0 (and also update the introDelay)
 
@@ -103,13 +103,13 @@ async function getData(scInfo) {
 
 				//player 1 name fade in
 				gsap.fromTo("#p1Intro",
-					{x: -pMove}, //from
-					{delay: introDelay, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime}); //to
+					{ x: -pMove }, //from
+					{ delay: introDelay, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime }); //to
 
 				//same for player 2
 				gsap.fromTo("#p2Intro",
-					{x: pMove},
-					{delay: introDelay, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+					{ x: pMove },
+					{ delay: introDelay, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 
 			} else { //if its not the first game, show game count
 				const midTextEL = document.getElementById('midTextIntro');
@@ -126,7 +126,7 @@ async function getData(scInfo) {
 						midTextEL.textContent = "Final Game";
 						//if GF, we dont know if its the last game or not, right?
 						if (round.toLocaleUpperCase() == "Grand Finals".toLocaleUpperCase() && !(p1WL == "L" && p2WL == "L")) {
-							gsap.to("#superCoolInterrogation", {delay: introDelay+.5, opacity: 1, ease: "power2.out", duration: 1.5});
+							gsap.to("#superCoolInterrogation", { delay: introDelay + .5, opacity: 1, ease: "power2.out", duration: 1.5 });
 						}
 
 					}
@@ -135,12 +135,12 @@ async function getData(scInfo) {
 
 			document.getElementById('roundIntro').textContent = round;
 			document.getElementById('tNameIntro').textContent = tournamentName;
-			
+
 			//round, tournament and VS/GameX text fade in
-			gsap.to(".textIntro", {delay: introDelay-.2, opacity: 1, ease: "power2.out", duration: fadeInTime});
+			gsap.to(".textIntro", { delay: introDelay - .2, opacity: 1, ease: "power2.out", duration: fadeInTime });
 
 			//aaaaand fade out everything
-			gsap.to("#overlayIntro", {delay: introDelay+1.6, opacity: 0, ease: "power2.out", duration: fadeInTime+.2});
+			gsap.to("#overlayIntro", { delay: introDelay + 1.6, opacity: 0, ease: "power2.out", duration: fadeInTime + .2 });
 
 			//lets delay everything that comes after this so it shows after the intro
 			introDelay = 2.6;
@@ -150,9 +150,9 @@ async function getData(scInfo) {
 		//update player name and team name texts
 		updatePlayerName('p1Wrapper', 'p1Name', 'p1Team', p1Name, p1Team);
 		//sets the starting position for the player text, then fades in and moves the p1 text to the next keyframe
-		gsap.fromTo("#p1Wrapper", 
-			{x: -pMove}, //from
-			{delay: introDelay+.1, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime}); //to
+		gsap.fromTo("#p1Wrapper",
+			{ x: -pMove }, //from
+			{ delay: introDelay + .1, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime }); //to
 
 		//set the character image and saga icon for the player
 		await updateChar(p1Character, p1Skin, 'p1Character', 'sagaIconP1');
@@ -181,9 +181,9 @@ async function getData(scInfo) {
 
 		//took notes from player 1? well, this is exactly the same!
 		updatePlayerName('p2Wrapper', 'p2Name', 'p2Team', p2Name, p2Team);
-		gsap.fromTo("#p2Wrapper", 
-			{x: pMove},
-			{delay: introDelay+.1, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+		gsap.fromTo("#p2Wrapper",
+			{ x: pMove },
+			{ delay: introDelay + .1, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 
 		await updateChar(p2Character, p2Skin, 'p2Character', 'sagaIconP2');
 		initCharaFade("#p2Character", "#sagaIconP2");
@@ -215,7 +215,7 @@ async function getData(scInfo) {
 		}
 		//fade them in (but only if round text is not empty)
 		if (round != "") {
-			gsap.to("#overlayRound", {delay: introDelay, opacity: 1, ease: "power2.out", duration: fadeInTime+.2});
+			gsap.to("#overlayRound", { delay: introDelay, opacity: 1, ease: "power2.out", duration: fadeInTime + .2 });
 		}
 
 		//set the caster info
@@ -230,7 +230,7 @@ async function getData(scInfo) {
 		socialChange1("caster1TwitterBox", "caster1TwitchBox");
 		socialChange2("caster2TwitterBox", "caster2TwitchBox");
 		//set an interval to keep changing the names
-		socialInt1 = setInterval( () => {
+		socialInt1 = setInterval(() => {
 			socialChange1("caster1TwitterBox", "caster1TwitchBox");
 		}, socialInterval);
 		socialInt2 = setInterval(() => {
@@ -268,7 +268,7 @@ async function getData(scInfo) {
 
 	//now things that will happen constantly
 	else {
-		
+
 		//player 1 time!
 		if (document.getElementById('p1Name').textContent != p1Name ||
 			document.getElementById('p1Team').textContent != p1Team) {
@@ -297,15 +297,15 @@ async function getData(scInfo) {
 		//the [W] and [L] status for grand finals
 		if (p1wlPrev != p1WL) {
 			//move it away!
-			gsap.to("#wlP1", {x: -pMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: pwlMoved});
+			gsap.to("#wlP1", { x: -pMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: pwlMoved });
 			function pwlMoved() {
 				//change the thing!
 				updateWL(p1WL, 1);
 				//move it back!
 				if (p1WL != "Nada") {
-					gsap.to("#wlP1", {delay: .3, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+					gsap.to("#wlP1", { delay: .3, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 				} else {
-					gsap.to("#wlP1", {x: 0, duration: fadeInTime});
+					gsap.to("#wlP1", { x: 0, duration: fadeInTime });
 				}
 			}
 			p1wlPrev = p1WL;
@@ -336,7 +336,7 @@ async function getData(scInfo) {
 
 		//did you pay attention earlier? Well, this is the same as player 1!
 		if (document.getElementById('p2Name').textContent != p2Name ||
-			document.getElementById('p2Team').textContent != p2Team){
+			document.getElementById('p2Team').textContent != p2Team) {
 			fadeOutMove("#p2Wrapper", pMove, () => {
 				updatePlayerName('p2Wrapper', 'p2Name', 'p2Team', p2Name, p2Team);
 				fadeInMove("#p2Wrapper");
@@ -353,13 +353,13 @@ async function getData(scInfo) {
 		}
 
 		if (p2wlPrev != p2WL) {
-			gsap.to("#wlP2", {x: pMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: pwlMoved});
+			gsap.to("#wlP2", { x: pMove, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: pwlMoved });
 			function pwlMoved() {
 				updateWL(p2WL, 2);
 				if (p2WL != "Nada") {
-					gsap.to("#wlP2", {delay: .3, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+					gsap.to("#wlP2", { delay: .3, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 				} else {
-					gsap.to("#wlP2", {x: 0, duration: fadeInTime});
+					gsap.to("#wlP2", { x: 0, duration: fadeInTime });
 				}
 			}
 			p2wlPrev = p2WL;
@@ -388,21 +388,21 @@ async function getData(scInfo) {
 		if (bestOfPrev != bestOf) {
 			if (bestOf == "Bo5") {
 				gsap.fromTo('#win3P1',
-					{x: -pMove},
-					{x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+					{ x: -pMove },
+					{ x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 				gsap.fromTo('#win3P2',
-					{x: pMove},
-					{x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
-				
+					{ x: pMove },
+					{ x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
+
 				fadeOut("#bestOf", () => {
 					document.getElementById('bestOf').textContent = "Best of 5";
 					fadeIn("#bestOf");
 				});
 			} else {
 				gsap.to('#win3P1',
-					{x: -pMove, opacity: 0, ease: "power2.in", duration: fadeInTime});
+					{ x: -pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
 				gsap.to('#win3P2',
-					{x: pMove, opacity: 0, ease: "power2.in", duration: fadeInTime});
+					{ x: pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
 
 				fadeOut("#bestOf", () => {
 					document.getElementById('bestOf').textContent = "Best of 3";
@@ -412,9 +412,9 @@ async function getData(scInfo) {
 			bestOfPrev = bestOf;
 		}
 
-		
+
 		//update the round text
-		if (document.getElementById('round').textContent != round){
+		if (document.getElementById('round').textContent != round) {
 			fadeOut("#overlayRound", () => {
 				updateRound(round);
 				if (round != "") {
@@ -425,7 +425,7 @@ async function getData(scInfo) {
 
 
 		//update caster 1 info
-		if (document.getElementById('caster1N').textContent != caster1){
+		if (document.getElementById('caster1N').textContent != caster1) {
 			fadeOut("#caster1TextBox", () => {
 				updateSocialText("caster1N", caster1, casterSize, 'caster1TextBox');
 				//if no caster name, dont fade in the caster icon
@@ -435,16 +435,16 @@ async function getData(scInfo) {
 			});
 		}
 		//caster 1's twitter
-		if (document.getElementById('caster1Tr').textContent != twitter1){
+		if (document.getElementById('caster1Tr').textContent != twitter1) {
 			updateSocial(twitter1, "caster1Tr", "caster1TwitterBox", twitch1, "caster1TwitchBox");
 		}
 		//caster 2's twitch (same as above)
-		if (document.getElementById('caster1Th').textContent != twitch1){
+		if (document.getElementById('caster1Th').textContent != twitch1) {
 			updateSocial(twitch1, "caster1Th", "caster1TwitchBox", twitter1, "caster1TwitterBox");
 		}
 
 		//caster 2, same as above
-		if (document.getElementById('caster2N').textContent != caster2){
+		if (document.getElementById('caster2N').textContent != caster2) {
 			fadeOut("#caster2TextBox", () => {
 				updateSocialText("caster2N", caster2, casterSize, 'caster2TextBox');
 				if (caster2 != "") {
@@ -452,11 +452,11 @@ async function getData(scInfo) {
 				}
 			});
 		}
-		if (document.getElementById('caster2Tr').textContent != twitter2){
+		if (document.getElementById('caster2Tr').textContent != twitter2) {
 			updateSocial(twitter2, "caster2Tr", "caster2TwitterBox", twitch2, "caster2TwitchBox");
 		}
 
-		if (document.getElementById('caster2Th').textContent != twitch2){
+		if (document.getElementById('caster2Th').textContent != twitch2) {
 			updateSocial(twitch2, "caster2Th", "caster2TwitchBox", twitter2, "caster2TwitterBox");
 		}
 	}
@@ -465,15 +465,15 @@ async function getData(scInfo) {
 
 //did an image fail to load? this will be used to show nothing
 function showNothing(itemEL) {
-	itemEL.setAttribute('src', 'Resources/Literally Nothing.png');
+	itemEL.setAttribute('src', '../resources/Literally Nothing.png');
 }
 
 
 //score change, pretty simple
 function updateScore(pNum, pScore, pColor) {
-	const score1EL = document.getElementById('win1P'+pNum);
-	const score2EL = document.getElementById('win2P'+pNum);
-	const score3EL = document.getElementById('win3P'+pNum);
+	const score1EL = document.getElementById('win1P' + pNum);
+	const score2EL = document.getElementById('win2P' + pNum);
+	const score3EL = document.getElementById('win3P' + pNum);
 
 
 	if (pScore >= 1) {
@@ -493,8 +493,8 @@ function updateScore(pNum, pScore, pColor) {
 	}
 }
 function scoreChange(scoreEL, color) {
-	gsap.to(scoreEL, {fill: "#ffffff", duration: fadeInTime})
-	gsap.to(scoreEL, {delay: fadeInTime, fill: color, duration: fadeInTime})
+	gsap.to(scoreEL, { fill: "#ffffff", duration: fadeInTime })
+	gsap.to(scoreEL, { delay: fadeInTime, fill: color, duration: fadeInTime })
 }
 
 //updates the player's text and portrait background colors
@@ -502,13 +502,13 @@ function updateColor(colorID, textID, pColor) {
 	const colorEL = document.getElementById(colorID);
 	const textEL = document.getElementById(textID);
 
-	gsap.to(colorEL, {backgroundColor: getHexColor(pColor), duration: fadeInTime});
-	gsap.to(textEL, {color: getHexColor(pColor), duration: fadeInTime});
+	gsap.to(colorEL, { backgroundColor: getHexColor(pColor), duration: fadeInTime });
+	gsap.to(textEL, { color: getHexColor(pColor), duration: fadeInTime });
 }
 
 function updateBorder(bestOf) {
-	document.getElementById('borderP1').setAttribute('src', 'Resources/Overlay/Border ' + bestOf + '.png');
-	document.getElementById('borderP2').setAttribute('src', 'Resources/Overlay/Border ' + bestOf + '.png');
+	document.getElementById('borderP1').setAttribute('src', '../resources/Overlay/Border ' + bestOf + '.png');
+	document.getElementById('borderP2').setAttribute('src', '../resources/Overlay/Border ' + bestOf + '.png');
 	bestOfPrev = bestOf
 }
 
@@ -516,9 +516,9 @@ function updateBorder(bestOf) {
 function updateTeamLogo(logoID, pTeam) {
 	//search for an image with the team name
 	const logoEL = document.getElementById(logoID);
-	logoEL.setAttribute('src', 'Resources/TeamLogos/' + pTeam + '.png');
+	logoEL.setAttribute('src', '../resources/TeamLogos/' + pTeam + '.png');
 	//no image? show nothing
-	if (startup) {logoEL.addEventListener("error", () => {showNothing(logoEL)})}
+	if (startup) { logoEL.addEventListener("error", () => { showNothing(logoEL) }) }
 }
 
 //the logic behind the twitter/twitch constant change
@@ -540,7 +540,7 @@ function socialChange1(twitterWrapperID, twitchWrapperID) {
 			twitterWrapperEL.style.opacity = 1;
 			twitchWrapperEL.style.opacity = 0;
 		}
-		
+
 
 	} else if (!!twitter1 && !!twitch1) {
 
@@ -598,19 +598,19 @@ function updateSocial(mainSocial, mainText, mainBox, otherSocial, otherBox) {
 	}
 	//check if this is their turn so we fade out the other one
 	if (localSwitch) {
-		fadeOut("#"+otherBox, () => {})
+		fadeOut("#" + otherBox, () => { })
 	}
 
 	//now do the classics
-	fadeOut("#"+mainBox, () => {
+	fadeOut("#" + mainBox, () => {
 		updateSocialText(mainText, mainSocial, twitterSize, mainBox);
 		//check if its twitter's turn to show up
 		if (otherSocial == "" && mainSocial != "") {
-			fadeIn("#"+mainBox, .2);
+			fadeIn("#" + mainBox, .2);
 		} else if (localSwitch && mainSocial != "") {
-			fadeIn("#"+mainBox, .2);
+			fadeIn("#" + mainBox, .2);
 		} else if (otherSocial != "") {
-			fadeIn("#"+otherBox, .2);
+			fadeIn("#" + otherBox, .2);
 		}
 	});
 }
@@ -653,70 +653,70 @@ function updateSocialText(textID, textToType, maxSize, wrapper) {
 
 //fade out
 function fadeOut(itemID, funct) {
-	gsap.to(itemID, {opacity: 0, duration: fadeOutTime, onComplete: funct});
+	gsap.to(itemID, { opacity: 0, duration: fadeOutTime, onComplete: funct });
 }
 
 //fade out but with movement
 function fadeOutMove(itemID, move, funct) {
-	gsap.to(itemID, {x: -move, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: funct});
+	gsap.to(itemID, { x: -move, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: funct });
 }
 
 //fade out but for character/saga icon
-function fadeOutChara (itemID, sagaID, move, funct) {
-	gsap.to(itemID, {x: -move, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: funct});
-	gsap.to(sagaID, {opacity: 0, ease: "power1.in", duration: fadeOutTime});
+function fadeOutChara(itemID, sagaID, move, funct) {
+	gsap.to(itemID, { x: -move, opacity: 0, ease: "power1.in", duration: fadeOutTime, onComplete: funct });
+	gsap.to(sagaID, { opacity: 0, ease: "power1.in", duration: fadeOutTime });
 }
 
 //fade in
 function fadeIn(itemID) {
-	gsap.to(itemID, {delay: .2, opacity: 1, duration: fadeInTime});
+	gsap.to(itemID, { delay: .2, opacity: 1, duration: fadeInTime });
 }
 
 //fade in but with movement
 function fadeInMove(itemID) {
-	gsap.to(itemID, {delay: .3, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+	gsap.to(itemID, { delay: .3, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 }
 
 //fade in but for the character/saga icon
 function fadeInChara(itemID, sagaID, move = pMove) {
-	gsap.to(itemID, {delay: .2, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+	gsap.to(itemID, { delay: .2, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 	gsap.fromTo(sagaID,
-		{x: -move},
-		{delay: .3, x: 0, opacity: .3, ease: "power1.in", duration: fadeOutTime});
+		{ x: -move },
+		{ delay: .3, x: 0, opacity: .3, ease: "power1.in", duration: fadeOutTime });
 }
 
 //fade in for the characters when first loading
 function initCharaFade(charaID, sagaID, move = pMove) {
 	gsap.fromTo(charaID,
-		{x: pMove},
-		{delay: introDelay, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+		{ x: pMove },
+		{ delay: introDelay, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 	gsap.fromTo(sagaID,
-		{x: move},
-		{delay: introDelay+.2, x: 0, opacity: .3, ease: "power2.out", duration: fadeInTime});
+		{ x: move },
+		{ delay: introDelay + .2, x: 0, opacity: .3, ease: "power2.out", duration: fadeInTime });
 }
 
 //played when loading the html
 function moveScoresIntro(pNum, bestOf, pWL, move) {
-	const score1EL = document.getElementById('win1P'+pNum);
-	const score2EL = document.getElementById('win2P'+pNum);
-	const score3EL = document.getElementById('win3P'+pNum);
-	const wlEL = document.getElementById('wlP'+pNum);
+	const score1EL = document.getElementById('win1P' + pNum);
+	const score2EL = document.getElementById('win2P' + pNum);
+	const score3EL = document.getElementById('win3P' + pNum);
+	const wlEL = document.getElementById('wlP' + pNum);
 
-	gsap.fromTo(score1EL, 
-		{x:-move},
-		{delay: introDelay+.2, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
-	gsap.fromTo(score2EL, 
-		{x:-move},
-		{delay: introDelay+.4, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+	gsap.fromTo(score1EL,
+		{ x: -move },
+		{ delay: introDelay + .2, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
+	gsap.fromTo(score2EL,
+		{ x: -move },
+		{ delay: introDelay + .4, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 	if (bestOf == "Bo5") {
-		gsap.fromTo(score3EL, 
-			{x:-move},
-			{delay: introDelay+.6, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+		gsap.fromTo(score3EL,
+			{ x: -move },
+			{ delay: introDelay + .6, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 	}
 	if (pWL == "W" || pWL == "L") {
-		gsap.fromTo(wlEL, 
-			{x:-move},
-			{delay: introDelay+.8, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime});
+		gsap.fromTo(wlEL,
+			{ x: -move },
+			{ delay: introDelay + .8, x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
 	}
 
 }
@@ -726,13 +726,15 @@ function moveScoresIntro(pNum, bestOf, pWL, move) {
 function updateWL(pWL, playerNum) {
 	const pWLEL = document.getElementById('wlP' + playerNum + 'Text');
 	if (pWL == "W") {
-		pWLEL.setAttribute('src', 'Resources/Overlay/[W].png')
+		pWLEL.setAttribute('src', '../resources/Overlay/[W].png')
 	} else if (pWL == "L") {
-		pWLEL.setAttribute('src', 'Resources/Overlay/[L].png')
+		pWLEL.setAttribute('src', '../resources/Overlay/[L].png')
 	}
-	if (startup) {pWLEL.addEventListener("error", () => {
-		showNothing(pWLEL)
-	})}
+	if (startup) {
+		pWLEL.addEventListener("error", () => {
+			showNothing(pWLEL)
+		})
+	}
 }
 
 //text resize, keeps making the text smaller until it fits
@@ -776,11 +778,11 @@ function getInfo() {
 	return new Promise(function (resolve) {
 		const oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", reqListener);
-		oReq.open("GET", 'Resources/Texts/ScoreboardInfo.json');
+		oReq.open("GET", '../resources/Texts/ScoreboardInfo.json');
 		oReq.send();
 
 		//will trigger when file loads
-		function reqListener () {
+		function reqListener() {
 			resolve(JSON.parse(oReq.responseText))
 		}
 	})
@@ -792,13 +794,13 @@ function getCharInfo(pCharacter) {
 	return new Promise(function (resolve) {
 		const oReq = new XMLHttpRequest();
 		oReq.addEventListener("load", reqListener);
-		oReq.onerror = () => {resolve("notFound")}; //for obs local file browser sources
-		oReq.open("GET", 'Resources/Texts/Character Info/' + pCharacter + '.json');
+		oReq.onerror = () => { resolve("notFound") }; //for obs local file browser sources
+		oReq.open("GET", '../resources/Texts/Character Info/' + pCharacter + '.json');
 		oReq.send();
 
-		function reqListener () {
-			try {resolve(JSON.parse(oReq.responseText))}
-			catch {resolve("notFound")} //for live servers
+		function reqListener() {
+			try { resolve(JSON.parse(oReq.responseText)) }
+			catch { resolve("notFound") } //for live servers
 		}
 	})
 }
@@ -807,20 +809,22 @@ function getCharInfo(pCharacter) {
 async function updateChar(pCharacter, pSkin, charID, sagaID) {
 	const charEL = document.getElementById(charID);
 	//change the image path depending on the character and skin
-	charEL.setAttribute('src', 'Resources/Characters/Portraits/' + pCharacter + '/' + pSkin + '.png');
+	charEL.setAttribute('src', '../resources/Characters/Portraits/' + pCharacter + '/' + pSkin + '.png');
 	//add a listener to show the random portrait if the image fails to load
-	if (startup) {charEL.addEventListener("error", () => {
-		if (charEL == document.getElementById("p1Character")) {
-			charEL.setAttribute('src', 'Resources/Characters/Portraits/Random CPU.png');
-		} else {
-			charEL.setAttribute('src', 'Resources/Characters/Portraits/Random CPU 2.png');
-		}
-	})}
+	if (startup) {
+		charEL.addEventListener("error", () => {
+			if (charEL == document.getElementById("p1Character")) {
+				charEL.setAttribute('src', '../resources/Characters/Portraits/Random CPU.png');
+			} else {
+				charEL.setAttribute('src', '../resources/Characters/Portraits/Random CPU 2.png');
+			}
+		})
+	}
 
 	//update the saga icon depending on the character
 	const sagaEL = document.getElementById(sagaID);
 	const charInfo = await getCharInfo(pCharacter);
-	sagaEL.setAttribute('src', 'Resources/Characters/Saga Icons/' + charInfo.saga + '.png')
+	sagaEL.setAttribute('src', '../resources/Characters/Saga Icons/' + charInfo.saga + '.png')
 	//add a listener to show nothing if the image fails to load
-	if (startup) {sagaEL.addEventListener("error", () => {showNothing(sagaEL)})}
+	if (startup) { sagaEL.addEventListener("error", () => { showNothing(sagaEL) }) }
 }

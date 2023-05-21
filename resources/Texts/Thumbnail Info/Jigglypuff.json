@@ -1,0 +1,20 @@
+{
+    "skinList": [
+        "Default",
+        "Red",
+        "Blue",
+        "Headband",
+        "Crown"
+    ],
+    "saga": "Pokemon",
+    "Left": {
+        "x": 0,
+        "y": 560,
+        "scale": 1.4
+    },
+    "Right": {
+        "x": -130,
+        "y": 490,
+        "scale": 0.78
+    }
+}

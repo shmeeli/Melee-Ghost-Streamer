@@ -1,21 +1,21 @@
 {
     "scaleVertical": false,
     "center": {
-        "x": 337,
-        "y": 0,
-        "w": 1250,
-        "h": 1080
+        "left": 337,
+        "top": 0,
+        "right": 1587,
+        "bottom": 1080
     },
     "left": {
-        "x": 0,
-        "y": 400,
-        "w": 336,
-        "h": 680
+        "left": 0,
+        "top": 400,
+        "right": 336,
+        "bottom": 1080
     },
     "right": {
-        "x": 1584,
-        "y": 400,
-        "w": 336,
-        "h": 680
+        "left": 1584,
+        "top": 400,
+        "right": 336,
+        "bottom": 1080
     }
 }

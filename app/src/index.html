@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title>Melee Ghost Streamer</title>
   <link rel="stylesheet" href="index.css">
+  <script src="init.js" defer></script>
   <script src="compute.js" defer></script>
   <script src="autoloader.js" defer></script>
   <script src="gui.js" defer></script>
@@ -24,7 +25,7 @@
       <input type="text" id="slippiDirectory" style="width: 1000px;" placeholder="Set your Slippi replay folder"
         oninput="setDirectory(this.value)">
 
-      <input type="text" style="width: 1000px;" placeholder="Set your OBS mkv recording path"
+      <input type="text" style="width: 1000px;" id="recordingPath" placeholder="Set your OBS mkv recording path"
         oninput="setRecordingPath(this.value)">
 
       <div>
@@ -38,9 +39,9 @@
       <div>
         <input type="text" id="startggUrl" style="width: 525px; display:inline;"
           placeholder="Set the start.gg bracket url" oninput="setStartggBracketUrl(this.value)">
-        <span>Toggle fetching current match</span>
         <input type="checkbox" id="toggleStartgg" tabindex="6" title="Whether to fetch the current start.gg match"
           onclick="toggleStartgg(this)">
+        <label for="toggleStartgg">Auto fetch set</label>
       </div>
 
       <div id="playerRegion">
@@ -71,12 +72,12 @@
               <div class="pCheckboxes">
                 <input type="button" value="Swap names" style="font-size:10px; height: 20px" onclick="swapNames()">
                 <div class="pCheckbox pAuto">
-                  <span>Auto name</span>
+                  <label for="p1Auto">Auto name</label>
                   <input type="checkbox" id="p1Auto" tabindex="6"
                     title="Whether to automatically use the player's Slippi name">
                 </div>
                 <div class="pCheckbox pPort">
-                  <span>Lower port prio</span>
+                  <label for="pPort">Lower port prio</label>
                   <input type="checkbox" id="pPort" tabindex="7" onclick="swapPortPrio(this)"
                     title="Check this if this player should be the lower port.">
                 </div>
@@ -166,8 +167,10 @@
                 <div class="dropdownColor" id="dropdownColorP2"></div>
               </div>
               <div class="pCheckboxes">
+                <input type="button" id="fetchStartGG" value="Fetch start.gg set" style="font-size:10px; height: 20px"
+                  onclick="fetchSetDataFromStartGG(true)">
                 <div class="pCheckbox pAuto">
-                  <span>Auto name</span>
+                  <label for="p2Auto">Auto name</label>
                   <input type="checkbox" id="p2Auto" tabindex="6"
                     title="Whether to automatically use the player's Slippi name">
                 </div>
@@ -325,20 +328,25 @@
       <hr>
 
       <div id="scenes" class="scenes">
+        <input type="checkbox" id="autoSwitchScenes" tabindex="6" onchange="onAutoSceneSwitchCheck()">
+        <label for=" autoSwitchScenes">Auto switch scenes</label>
         <div class="sceneInfo">
           <input type="text" id="sceneGameStart" class="textInput mousetrap" placeholder="Game scene name"
-            spellcheck="false">
-          <input type="text" id="sceneGameStartDelay" class="textInput mousetrap" placeholder="Delay in seconds">
+            spellcheck="false" disabled="true">
+          <input type="text" id="sceneGameStartDelay" class="textInput mousetrap" placeholder="Delay in seconds"
+            disabled="true">
         </div>
         <div class="sceneInfo">
           <input type="text" id="sceneGameEnd" class="textInput mousetrap" placeholder="Game end scene name"
-            spellcheck="false">
-          <input type="text" id="sceneGameEndDelay" class="textInput mousetrap" placeholder="Delay in seconds">
+            spellcheck="false" disabled="true">
+          <input type="text" id="sceneGameEndDelay" class="textInput mousetrap" placeholder="Delay in seconds"
+            disabled="true">
         </div>
         <div class="sceneInfo">
           <input type="text" id="sceneSetEnd" class="textInput mousetrap" placeholder="Set end scene name"
-            spellcheck="false">
-          <input type="text" id="sceneSetEndDelay" class="textInput mousetrap" placeholder="Delay in seconds">
+            spellcheck="false" disabled="true">
+          <input type="text" id="sceneSetEndDelay" class="textInput mousetrap" placeholder="Delay in seconds"
+            disabled="true">
         </div>
       </div>
 
@@ -347,14 +355,15 @@
       <div id="replay" class="replay">
         <input type="number" id="replayDuration" class="textInput mousetrap" placeholder="10"
           style="width:50px; margin-left: 10px;" spellcheck="false">
-        <input type="button" value="REPLAY" onclick="createReplay()">
+        <input type="button" id="replayButton" value="REPLAY" onclick="createReplay()">
         <input type="checkbox" id="replayShort">
-        <span>Convert to short</span>
+        <label for="replayShort">Convert to short</label>
       </div>
 
-      <input type="button" value="THUMBNAIL" style="display: inline; margin-left:70px;" onclick="createThumbnail()">
+      <input type="button" id="thumbnailButton" value="THUMBNAIL" style="display: inline; margin-left:70px;"
+        onclick="createThumbnail()">
 
-      <input type="button" value="SHORT" style="display: inline; margin-left:170px;"
+      <input type="button" id="shortButton" value="SHORT" style="display: inline; margin-left:170px;"
         onclick="createShort(recordingPath)">
 
       <div id="botBar">

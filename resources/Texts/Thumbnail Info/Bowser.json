@@ -1,0 +1,19 @@
+{
+    "skinList": [
+        "Default",
+        "Red",
+        "Blue",
+        "Black"
+    ],
+    "saga": "Mario",
+    "Left": {
+        "x": 20,
+        "y": 480,
+        "scale": 1.4
+    },
+    "Right": {
+        "x": -50,
+        "y": 400,
+        "scale": 1.05
+    }
+}

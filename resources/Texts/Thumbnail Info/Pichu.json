@@ -1,0 +1,19 @@
+{
+    "skinList": [
+        "Default",
+        "Red",
+        "Blue",
+        "Green"
+    ],
+    "saga": "Pokemon",
+    "Left": {
+        "x": 0,
+        "y": 530,
+        "scale": 1.2
+    },
+    "Right": {
+        "x": -90,
+        "y": 470,
+        "scale": 0.75
+    }
+}

@@ -8,13 +8,19 @@
     ],
     "saga": "Zelda",
     "Left": {
-        "x": 0,
-        "y": 520,
-        "scale": 1
+        "x": 50,
+        "y": 430,
+        "scale": 1.6,
+        "xSheik": 75,
+        "ySheik": 275,
+        "scaleSheik": 1.6
     },
     "Right": {
-        "x": -70,
-        "y": 480,
-        "scale": 0.85
+        "x": 620,
+        "y": 270,
+        "scale": 1.4,
+        "xSheik": 750,
+        "ySheik": 125,
+        "scaleSheik": 1.3
     }
 }

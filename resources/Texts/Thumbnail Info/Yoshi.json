@@ -1,0 +1,21 @@
+{
+    "skinList": [
+        "Default",
+        "Red",
+        "Blue",
+        "Yellow",
+        "Pink",
+        "Cyan"
+    ],
+    "saga": "Yoshi",
+    "Left": {
+        "x": 0,
+        "y": 460,
+        "scale": 1.4
+    },
+    "Right": {
+        "x": -50,
+        "y": 380,
+        "scale": 1
+    }
+}

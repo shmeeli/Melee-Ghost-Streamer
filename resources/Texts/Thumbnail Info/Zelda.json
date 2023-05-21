@@ -1,0 +1,20 @@
+{
+    "skinList": [
+        "Default",
+        "Red",
+        "Blue",
+        "Green",
+        "White"
+    ],
+    "saga": "Zelda",
+    "Left": {
+        "x": 0,
+        "y": 520,
+        "scale": 1
+    },
+    "Right": {
+        "x": -70,
+        "y": 480,
+        "scale": 0.85
+    }
+}
