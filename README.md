@@ -23,6 +23,8 @@ A fork of [Readek's Melee Stream Tool](https://github.com/Readek/Melee-Stream-To
 2. Unzip the files.
 3. Start `Melee Ghost Streamer.exe`.
 
+⚠️ Note: For the video features (VODs, replays, shorts) you will need [FFmpeg](https://ffmpeg.org/) installed and have it in your [environment path](https://superuser.com/questions/284342/what-are-path-and-other-environment-variables-and-how-can-i-set-or-use-them).
+
 ---
 
 ## Interface Guide
