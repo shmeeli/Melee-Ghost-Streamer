@@ -113,13 +113,12 @@ async function getData(scInfo) {
 
 			} else { //if its not the first game, show game count
 				const midTextEL = document.getElementById('midTextIntro');
-				if ((p1Score + p2Score) != 4) { //if its not the last game of a bo5
+				if ((p1Score + p2Score) != 4 || bestOf != "Best of 5") { //if its not the last game of a bo5
 
 					//just show the game count in the intro
 					midTextEL.textContent = "Game " + (p1Score + p2Score + 1);
 
-				} else { //if game 5
-
+				} else if (bestOf == "Best of 5") { //if game 5
 					if ((round.toUpperCase() == "True Finals".toUpperCase())) { //if true finals
 						midTextEL.textContent = "True Final Game"; //i mean shit gets serious here
 					} else {
@@ -208,11 +207,7 @@ async function getData(scInfo) {
 		//update the round text
 		updateRound(round);
 		//update the best of text
-		if (bestOf == "Bo5") {
-			document.getElementById('bestOf').textContent = "Best of 5";
-		} else {
-			document.getElementById('bestOf').textContent = "Best of 3";
-		}
+		document.getElementById('bestOf').textContent = bestOf;
 		//fade them in (but only if round text is not empty)
 		if (round != "") {
 			gsap.to("#overlayRound", { delay: introDelay, opacity: 1, ease: "power2.out", duration: fadeInTime + .2 });
@@ -386,19 +381,60 @@ async function getData(scInfo) {
 
 		//hide or show score ticks depending of the Best Of status
 		if (bestOfPrev != bestOf) {
-			if (bestOf == "Bo5") {
-				gsap.fromTo('#win3P1',
-					{ x: -pMove },
-					{ x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
+			if (bestOf == "Best of 5") {
+				if (bestOfPrev != "Best of 3") {
+					gsap.fromTo('#win2P1',
+						{ x: -pMove },
+						{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#win1P1',
+						{ x: -pMove },
+						{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#win2P2',
+						{ x: pMove },
+						{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#win1P2',
+						{ x: pMove },
+						{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#scoreP1',
+						{ opacity: 1 },
+						{ opacity: 0, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#scoreP2',
+						{ opacity: 1 },
+						{ opacity: 0, ease: "power2.in", duration: fadeInTime });
+				}
 				gsap.fromTo('#win3P2',
 					{ x: pMove },
-					{ x: 0, opacity: 1, ease: "power2.out", duration: fadeInTime });
+					{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+				gsap.fromTo('#win3P1',
+					{ x: -pMove },
+					{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
 
 				fadeOut("#bestOf", () => {
 					document.getElementById('bestOf').textContent = "Best of 5";
 					fadeIn("#bestOf");
 				});
-			} else {
+			} else if (bestOf == "Best of 3") {
+				if (bestOfPrev != "Best of 5") {
+					gsap.fromTo('#win2P1',
+						{ x: -pMove },
+						{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#win1P1',
+						{ x: -pMove },
+						{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#win2P2',
+						{ x: pMove },
+						{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#win1P2',
+						{ x: pMove },
+						{ x: 0, opacity: 1, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#scoreP1',
+						{ opacity: 1 },
+						{ opacity: 0, ease: "power2.in", duration: fadeInTime });
+					gsap.fromTo('#scoreP2',
+						{ opacity: 1 },
+						{ opacity: 0, ease: "power2.in", duration: fadeInTime });
+				}
+
 				gsap.to('#win3P1',
 					{ x: -pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
 				gsap.to('#win3P2',
@@ -408,7 +444,30 @@ async function getData(scInfo) {
 					document.getElementById('bestOf').textContent = "Best of 3";
 					fadeIn("#bestOf");
 				});
+			} else {
+				fadeOut("#bestOf", () => {
+					document.getElementById('bestOf').textContent = bestOf;
+					fadeIn("#bestOf");
+				});
+
+				gsap.to('#win3P1',
+					{ x: -pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
+				gsap.to('#win2P1',
+					{ x: -pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
+				gsap.to('#win1P1',
+					{ x: -pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
+				gsap.to('#win3P2',
+					{ x: pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
+				gsap.to('#win2P2',
+					{ x: pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
+				gsap.to('#win1P2',
+					{ x: pMove, opacity: 0, ease: "power2.in", duration: fadeInTime });
+				gsap.to('#scoreP1',
+					{ opacity: 1, ease: "power2.in", duration: fadeInTime });
+				gsap.to('#scoreP2',
+					{ opacity: 1, ease: "power2.in", duration: fadeInTime });
 			}
+
 			bestOfPrev = bestOf;
 		}
 
@@ -475,6 +534,8 @@ function updateScore(pNum, pScore, pColor) {
 	const score2EL = document.getElementById('win2P' + pNum);
 	const score3EL = document.getElementById('win3P' + pNum);
 
+	const scoreText = document.getElementById('scoreP' + pNum);
+	scoreText.textContent = pScore;
 
 	if (pScore >= 1) {
 		scoreChange(score1EL, getHexColor(pColor));

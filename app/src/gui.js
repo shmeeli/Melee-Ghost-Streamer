@@ -1020,6 +1020,7 @@ function writeScoreboard() {
         p2Score: checkScore(p2Score),
         p2WL: currentP2WL,
         round: roundInp.value,
+        bestOf: currentBestOf,
         tournamentName: document.getElementById('tournamentName').value,
         caster1Name: document.getElementById('cName1').value,
         caster1Twitter: document.getElementById('cTwitter1').value,
