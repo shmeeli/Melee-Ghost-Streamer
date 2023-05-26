@@ -355,7 +355,9 @@
       <div id="replay" class="replay">
         <input type="number" id="replayDuration" class="textInput mousetrap" placeholder="10"
           style="width:50px; margin-left: 10px;" spellcheck="false">
-        <input type="button" id="replayButton" value="REPLAY" onclick="createReplay()">
+        <input type="button" id="replayButton" value="REPLAY" onclick="createReplay(true)">
+        <input type="checkbox" id="replayAuto">
+        <label for="replayAuto">Auto</label>
         <input type="checkbox" id="replayShort">
         <label for="replayShort">Convert to short</label>
       </div>

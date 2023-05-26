@@ -270,6 +270,7 @@ let sceneSwitchTimeout;
 function init() {
     onGameStarted(updatePlayers)
     onGameFinished(updateScore)
+    onReplay(createReplay)
 
     //first, add listeners for the bottom bar buttons
     document.getElementById('updateRegion').addEventListener("click", writeScoreboard);
@@ -1742,7 +1743,11 @@ async function loadImage(src) {
     });
 }
 
-async function createReplay() {
+async function createReplay(button) {
+    if (!button && !document.getElementById('replayAuto').checked) {
+        return;
+    }
+
     try {
         if (obsRecordingPath == null || obsRecordingPath == '') {
             console.log("No recording path set");

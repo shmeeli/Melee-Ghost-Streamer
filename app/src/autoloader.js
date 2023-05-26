@@ -5,6 +5,7 @@ let watcher;
 
 let callbackStarted;
 let callbackFinished;
+let callbackReplay;
 
 onGameStarted = cb => {
     callbackStarted = cb
@@ -14,9 +15,15 @@ onGameFinished = cb => {
     callbackFinished = cb
 }
 
+onReplay = cb => {
+    callbackReplay = cb
+}
+
+
 const gameByPath = {};
 
 let timeout;
+let comboCount = 0;
 
 setDirectory = dir => {
     if (timeout) {
@@ -56,6 +63,39 @@ setDirectory = dir => {
 
                 settings = game.getSettings();
                 gameEnd = game.getGameEnd();
+                stats = game.getStats();
+
+                if (stats.combos.length > comboCount && !gameEnd) {
+                    if (stats.combos[stats.combos.length - 1].endFrame != null) {
+                        comboCount = stats.combos.length;
+                        const combo = stats.combos[comboCount - 1];
+                        const percentIncrease = combo.endPercent - combo.startPercent;
+                        const moveCount = combo.moves.length;
+                        const didKill = combo.didKill;
+
+                        console.log(percentIncrease, moveCount, didKill);
+
+                        let score = 0;
+                        if (percentIncrease >= 30) {
+                            score += 1;
+                        }
+
+                        if (moveCount >= 4) {
+                            score += 1;
+                        }
+
+                        if (didKill) {
+                            score += 1;
+                        }
+
+                        if (score >= 2) {
+                            if (callbackReplay) {
+                                console.log("Made a Combo replay!", combo)
+                                setTimeout(callbackReplay, 1000);
+                            }
+                        }
+                    }
+                }
             } catch (err) {
                 console.log(err);
                 return;
@@ -76,6 +116,12 @@ setDirectory = dir => {
             }
 
             if (gameEnd) {
+                comboCount = 0;
+
+                if (callbackReplay) {
+                    callbackReplay();
+                }
+
                 if (callbackFinished) {
                     const game = gameByPath[path].game;
                     const gameData = getGameData(game)
