@@ -1826,8 +1826,8 @@ async function fetchSetDataFromStartGG(fromButton) {
         let player1, tag1
 
         if (player1Container != null) {
-            player1 = player1Container.textContent.replace(tag1, '').trim();
             tag1 = player1Container.querySelector('.prefix')?.textContent.trim() || '';
+            player1 = player1Container.textContent.replace(tag1, '').trim();
         } else {
             player1 = parent.querySelector('.match-section-top .match-player-name').textContent.trim();
             tag1 = '';
@@ -1838,8 +1838,8 @@ async function fetchSetDataFromStartGG(fromButton) {
         let player2, tag2
 
         if (player2Container != null) {
-            player2 = player2Container.textContent.replace(tag2, '').trim();
             tag2 = player2Container.querySelector('.prefix')?.textContent.trim() || '';
+            player2 = player2Container.textContent.replace(tag2, '').trim();
         } else {
             player2 = parent.querySelector('.match-section-bottom .match-player-name').textContent.trim();
             tag2 = '';
