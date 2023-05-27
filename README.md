@@ -85,6 +85,14 @@ Click on the `REPLAY` button to create a replay, or use the shortcut `F9`. This 
 
 Replays will appear in the `Replays` folder in the directory of your OBS mkv recording path.
 
+You can check `Auto` to automatically make replays when a combo happens. The current conditions for a combo are a combination of two of these:
+
+* Percentage is increased by 30%
+* There were 4 or more consecutive moves
+* The combo killed
+
+Depending on the player this can make for either a lot or no replays, and won't be of the best quality. Therefore you should only use this option when you have no one to manually click the replay button. In the future I will add an option to configure these conditions.
+
 #### Shorts
 
 You can enable `Convert to short` to automatically convert a replay into a Youtube Short/TikTok video (a vertical video). The way this works is that it cuts the video into three parts. This is with the assumption that most Melee layouts have a left bar, a right bar, and the game in the center. You can configure the coordinates in [resources/Recordings/Shorts/coordinates.json](resources/Recordings/Shorts/coordinates.json). When `scaleVertical` is set to `false` the left and right bar will be scaled until the reach the center. When set to `true` they scale until they reach the bottom. The height of the video is the width of the center part * 16 / 9, to create a 9:16 resolution. Currently the automated shorts are limited to this three parts usecase.
