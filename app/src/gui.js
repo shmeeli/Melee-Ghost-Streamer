@@ -1806,7 +1806,12 @@ async function fetchSetDataFromStartGG(fromButton) {
             return;
         }
 
-        const data = await fetch(startggBracket, { cache: 'no-cache' });
+        const data = await fetch(startggBracket, {
+            cache: 'no-cache',
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
         const htmlString = await data.text();
 
         const parser = new DOMParser();
