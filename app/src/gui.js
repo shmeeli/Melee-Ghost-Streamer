@@ -929,6 +929,7 @@ function swapNames() {
     changeInputWidth(p1TagInp);
     changeInputWidth(p2NameInp);
     changeInputWidth(p2TagInp);
+    writeScoreboard();
 }
 
 function swapScore() {
@@ -936,6 +937,7 @@ function swapScore() {
     tempP2Score = checkScore(p2Score);
     setScore(tempP2Score, p1Score);
     setScore(tempP1Score, p2Score);
+    writeScoreboard();
 }
 
 function clearPlayers() {
