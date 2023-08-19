@@ -314,6 +314,11 @@ function init() {
         document.getElementById('p2CharImg').setAttribute('src', charPath + '/Portraits/Random ' + colorP2 + '.png');
     });
 
+    p1W.addEventListener("click", setWLP1);
+    p1L.addEventListener("click", setWLP1);
+    p2W.addEventListener("click", setWLP2);
+    p2L.addEventListener("click", setWLP2);
+
     //check whenever the player's name has a skin
     p1NameInp.addEventListener("input", resizeInput);
     p2NameInp.addEventListener("input", resizeInput);
