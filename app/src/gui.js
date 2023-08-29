@@ -377,7 +377,7 @@ function init() {
 
     Mousetrap.bind('f1', () => { giveWinP1() });
     Mousetrap.bind('f2', () => { giveWinP2() });
-    Mousetrap.bind('f9', () => { createReplay() });
+    Mousetrap.bind('f9', () => { createReplay(true) });
 }
 
 function setRecordingPath(path) {
