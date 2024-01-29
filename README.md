@@ -207,6 +207,7 @@ Most of the code is in [gui.js](app/src/gui.js).
 You can use `npm run dist` to build a new executable.
 
 ---
+## Shmeeli
 
 ## Sheepolution
 
