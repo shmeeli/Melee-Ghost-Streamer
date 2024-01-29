@@ -160,6 +160,30 @@
             color: black;
         }
 
+        .pronounWrapper1 {
+            position: absolute;
+            top: 410px;
+            left: 15px;
+            width: 255px;
+            height: 54px;
+            line-height: 54px;
+            text-align: center;
+            opacity: 0;
+            color: black;
+        }
+
+        .pronounWrapper2 {
+            position: absolute;
+            top: 410px;
+            right: 15px;
+            width: 255px;
+            height: 54px;
+            line-height: 54px;
+            text-align: center;
+            opacity: 0;
+            color: black;
+        }
+
         #p1Wrapper {
             left: 5px;
         }
@@ -172,10 +196,15 @@
             color: rgb(116, 116, 116);
         }
 
+        .pronouns {
+            color: rgb(0, 0, 0);
+            font-size: 25px;
+        }
+
 
         .scores {
             position: absolute;
-            top: 434px;
+            top: 478px;
         }
 
         #scoresP2 {
@@ -452,8 +481,11 @@
         <span id="p1Wrapper" class="wrappers">
             <span id="p1Team" class="teams"></span>
             <span id="p1Name" class="names"></span>
+            
         </span>
+        
     </div>
+    <span id="p1Pronouns" class="pronouns pronounWrapper1"></span>
 
     <div id="scoresP1" class="scores">
         <p id="scoreP1" class="scoreTick">
@@ -504,7 +536,9 @@
             <span id="p2Team" class="teams"></span>
             <span id="p2Name" class="names"></span>
         </span>
+        
     </div>
+    <span id="p2Pronouns" class="pronouns pronounWrapper2"></span>
 
     <div id="scoresP2" class="scores">
         <p id="scoreP2" class="scoreTick">
