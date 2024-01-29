@@ -47,6 +47,7 @@ async function getData(scInfo) {
 	let p1Character = scInfo['p1Character'];
 	let p1Skin = scInfo['p1Skin'];
 	let p1WL = scInfo['p1WL'];
+	let p1Pronouns = scInfo['p1Pronouns'];
 
 	let p2Name = scInfo['p2Name'];
 	let p2Team = scInfo['p2Team'];
@@ -55,6 +56,7 @@ async function getData(scInfo) {
 	let p2Character = scInfo['p2Character'];
 	let p2Skin = scInfo['p2Skin'];
 	let p2WL = scInfo['p2WL'];
+	let p2Pronouns = scInfo['p2Pronouns'];
 
 	let round = scInfo['round'];
 	let bestOf = scInfo['bestOf'];
@@ -276,13 +278,22 @@ async function getData(scInfo) {
 			});
 		}
 
+		if (document.getElementById('p1Pronouns').textContent != p1Pronouns) {
+			//move and fade out the player 1's text
+			fadeOutMove("#p1Pronouns", -pMove, () => {
+				const element = document.getElementById("p1Pronouns");
+				element.textContent = p1Pronouns; //change the actual text
+				//now that nobody is seeing it, quick, change the text's content!
+				fadeInMove("#p1Pronouns");
+			});
+		}
+	
+
 		//player 1's character portrait change
 		if (p1CharacterPrev != p1Character || p1SkinPrev != p1Skin) {
 			//fade out the images while also moving them because that always looks cool
 			fadeOutChara("#p1Character", "#sagaIconP1", -pMove, async () => {
 				//now that nobody can see them, lets change the images!
-				updateChar(p1Character, p1Skin, 'p1Character', 'sagaIconP1'); //will return scale
-				//and now, fade them in
 				fadeInChara("#p1Character", '#sagaIconP1');
 			});
 			p1CharacterPrev = p1Character;
@@ -335,6 +346,16 @@ async function getData(scInfo) {
 			fadeOutMove("#p2Wrapper", pMove, () => {
 				updatePlayerName('p2Wrapper', 'p2Name', 'p2Team', p2Name, p2Team);
 				fadeInMove("#p2Wrapper");
+			});
+		}
+
+		if (document.getElementById('p2Pronouns').textContent != p2Pronouns) {
+			//move and fade out the player 1's text
+			fadeOutMove("#p2Pronouns", -pMove, () => {
+				const element = document.getElementById("p2Pronouns");
+				element.textContent = p2Pronouns; //change the actual text
+				//now that nobody is seeing it, quick, change the text's content!
+				fadeInMove("#p2Pronouns");
 			});
 		}
 

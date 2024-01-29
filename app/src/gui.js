@@ -81,7 +81,9 @@ const fieldIds = [
     "sceneGameEndDelay",
     "sceneSetEnd",
     "sceneSetEndDelay",
-    "replayDuration"
+    "replayDuration",
+    "p1Pronouns",
+    "p2Pronouns"
 ]
 
 const checkboxIds = [
@@ -169,6 +171,11 @@ let charP1Active = false;
 let scoreP1 = 0;
 let scoreP2 = 0;
 
+let p1Pronoun1 = "";
+let p1Pronoun2 = "";
+let p2Pronoun1 = "";
+let p2Pronoun2 = "";
+
 let setHistory = '? - ?';
 
 const viewport = document.getElementById('viewport');
@@ -199,6 +206,7 @@ p2Auto.onclick = (e) => {
     }
 }
 
+
 const charImgP1 = document.getElementById('p1CharImg');
 const charImgP2 = document.getElementById('p2CharImg');
 
@@ -206,6 +214,17 @@ const p1Score = document.getElementById('p1Score');
 p1Score.oninput = () => scoreP1 = p1Score.value;
 const p2Score = document.getElementById('p2Score');
 p2Score.oninput = () => scoreP2 = p2Score.value;
+
+const p1Pronouns1Inp = document.getElementById('p1Pronouns1');
+p1Pronouns1Inp.oninput = () => p1Pronoun1 = p1Pronouns1Inp.value;
+const p1Pronouns2Inp = document.getElementById('p1Pronouns2');
+p1Pronouns2Inp.oninput = () => p1Pronoun2 = p1Pronouns2Inp.value;
+
+const p2Pronouns1Inp = document.getElementById('p2Pronouns1');
+p2Pronouns1Inp.oninput = () => p2Pronoun1 = p2Pronouns1Inp.value;
+const p2Pronouns2Inp = document.getElementById('p2Pronouns2');
+p2Pronouns2Inp.oninput = () => p2Pronoun2 = p2Pronouns2Inp.value;
+
 
 const p1W = document.getElementById('p1W');
 const p1L = document.getElementById('p1L');
@@ -879,6 +898,12 @@ function applyNextInfo() {
 
     scoreP2 = 0;
     p2Score.value = scoreP2;
+
+    p1Pronoun1 = "";
+    p1Pronoun2 = "";
+    
+    p2Pronoun1 = "";
+    p2Pronoun2 = "";
 }
 
 
@@ -1019,6 +1044,7 @@ function writeScoreboard() {
         p1Skin: skinP1,
         p1Color: colorP1,
         p1Score: checkScore(p1Score),
+        p1Pronouns: p1Pronoun1 && p1Pronoun2 ? p1Pronoun1 + "/" + p1Pronoun2 : p1Pronoun1 ? p1Pronoun1 : p1Pronoun2,
         p1WL: currentP1WL,
         p2Name: p2NameInp.value,
         p2Team: p2TagInp.value,
@@ -1026,6 +1052,7 @@ function writeScoreboard() {
         p2Skin: skinP2,
         p2Color: colorP2,
         p2Score: checkScore(p2Score),
+        p2Pronouns: p2Pronoun1 && p2Pronoun2 ? p2Pronoun1 + "/" + p2Pronoun2 : p2Pronoun1 ? p2Pronoun1 : p2Pronoun2,
         p2WL: currentP2WL,
         round: roundInp.value,
         bestOf: currentBestOf,
@@ -1069,7 +1096,9 @@ function writeScoreboard() {
         scoreP2: scoreP2.toString(),
         setHistory,
         nextRound,
-        currentBestOf
+        currentBestOf,
+        p1Pronouns: p1Pronoun1 + "/" + p1Pronoun2,
+        p2Pronouns: p2Pronoun1 + "/" + p2Pronoun2
     }
 
     if (makeUppercase.checked || addSpace.checked) {

@@ -11,16 +11,17 @@ const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
-    height: 630,
+    height: 670,
 
     minWidth: 800,
-    minHeight: 630,
+    minHeight: 670,
     maxWidth: 800,
-    maxHeight: 630,
+    maxHeight: 670,
 
     webPreferences: {
       nodeIntegration: true,
-    }
+    },
+    resizable: false
   });
 
   // we dont like menus

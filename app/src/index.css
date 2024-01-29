@@ -87,7 +87,7 @@ input[type="text"] {
 /* player stuff */
 #playerRegion {
   display: flex;
-  height: 150px;
+  height: 180px;
 }
 
 .player {
@@ -711,4 +711,40 @@ input[type="text"] {
 
 #connectOBSStatus {
   font-size: 13px;
+}
+
+.pronounInfo {
+  margin-left: 10px;
+  font-family: 'Roboto-Medium';
+  display: flex;
+  align-items: center;
+  width: 55%;
+  padding: 8px 10px 12px 0px;
+}
+
+.pronounBox {
+  background-color: var(--bg4);
+  height: 30px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--bg4);
+  transition: border-color 100ms;
+  display: flex;
+  align-items: center;
+  color: var(--text2);
+}
+
+.pronouns {
+  outline: none;
+  border: none;
+  background: var(--bg6);
+  color: var(--text2);
+  height: 23px;
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--bg4);
+  transition: border-color 100ms;
+  width: 33%;
 }
